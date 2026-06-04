@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<title>2026 흰돌청년부 하계 아웃리치</title>
+<!-- deploy: topbar D-day + banner cleanup -->
+
+<style>
+  :root{
+    --bg:#ffffff; --bg-soft:#f4f4f5; --card:#ffffff;
+    --line:#e4e4e7; --line-soft:#f0f0f1;
+    --text:#0a0a0a; --muted:#8a8a90; --muted-2:#b4b4ba; --ink:#0a0a0a;
+    --r:12px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;
+    background:var(--bg-soft); color:var(--text);
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100vh; font-size:14px;
+  }
+  .app{
+    max-width:440px; margin:0 auto; min-height:100vh; background:var(--bg);
+    position:relative; padding-bottom:78px;
+    border-left:1px solid var(--line); border-right:1px solid var(--line);
+  }
+
+  header{ padding:15px 16px 14px; border-bottom:1px solid var(--line); position:relative; }
+  .bell{ position:absolute; top:13px; right:14px; width:34px; height:34px;
+    border:1px solid var(--line); background:#fff; border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); }
+  .bell svg{ width:18px; height:18px; }
+  .bell-badge{ position:absolute; top:-5px; right:-5px; min-width:16px; height:16px; padding:0 4px; border-radius:999px;
+    background:var(--ink); color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .noti-sec{ font-size:11px; font-weight:800; color:var(--muted); margin:14px 0 8px; }
+  .noti-sec:first-child{ margin-top:4px; }
+  .noti-item{ padding:9px 2px; border-bottom:1px solid var(--line-soft); }
+  .noti-item:last-child{ border-bottom:0; }
+  .noti-t{ font-size:13px; font-weight:800; }
+  .noti-b{ font-size:12.5px; color:var(--muted); line-height:1.5; margin-top:2px; }
+  .noti-b b{ color:var(--text); font-weight:700; margin-right:4px; }
+  .eyebrow{ font-size:11px;letter-spacing:.04em; color:var(--muted);font-weight:700;margin:0 0 4px; }
+  h1{font-size:24px;line-height:1.2;margin:0;font-weight:800;letter-spacing:-.02em;}
+  .verse{margin:6px 0 0;font-size:13px;font-weight:700;color:var(--text);}
+  .verse span{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;line-height:1.45;}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;}
+  .chip{ display:inline-flex;align-items:center;gap:4px; background:var(--bg-soft); border:1px solid var(--line);
+    padding:4px 9px;border-radius:999px; font-size:11px;color:var(--text);font-weight:600; }
+  .chip-btn{ font-family:inherit;cursor:pointer;transition:.15s; }
+  .chip-btn:active{ background:var(--ink);color:#fff;border-color:var(--ink); }
+  .chip-arrow{ opacity:.5;font-size:10px; }
+
+  /* bottom-sheet modal */
+  .modal{ position:fixed;inset:0;z-index:100;display:flex;align-items:flex-end;justify-content:center; background:rgba(0,0,0,.4); }
+  .modal[hidden]{ display:none; }
+  .modal-card{ width:100%;max-width:440px;background:#fff; border-radius:16px 16px 0 0; padding:18px 18px max(18px,env(safe-area-inset-bottom)); animation:slideup .25s ease; }
+  @keyframes slideup{ from{transform:translateY(40px);opacity:0;} to{transform:none;opacity:1;} }
+  .modal-head{ display:flex;justify-content:space-between;align-items:center; font-size:15px;font-weight:800;margin-bottom:3px; }
+  .modal-x{ border:0;background:none;font-size:16px;color:var(--muted);cursor:pointer;padding:4px;font-family:inherit; }
+  .m-sub{ color:var(--muted);font-size:12px;margin:0 0 10px; }
+  .m-row{ display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:13px; }
+  .m-row:last-child{ border-bottom:0; }
+  .m-row b{ flex-shrink:0;width:84px;font-weight:700; }
+  .m-row span{ color:var(--muted); }
+  .fee-row{ display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:13px; }
+  .fee-row:last-child{ border-bottom:0; }
+  .fee-row b{ font-weight:700; }
+  .fee-row span{ color:var(--text);font-weight:700;white-space:nowrap; }
+  .m-account{ margin-top:12px;background:var(--bg-soft);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13px;font-weight:700; }
+  .m-account small{ display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px; }
+
+  .topbar{ display:flex;align-items:center;justify-content:center;gap:7px; background:var(--ink);color:#fff;
+    padding:max(5px,env(safe-area-inset-top)) 12px 5px; font-size:11.5px;font-weight:700; }
+  .topbar .lab{color:#bdbdc4;font-weight:600;}
+  .topbar b{font-weight:900;letter-spacing:-.02em;}
+  .topbar #cdLabel{color:#cfd3da;font-weight:600;}
+
+  .tabs{ position:fixed;bottom:0;left:50%;transform:translateX(-50%); width:100%;max-width:440px; display:flex;
+    background:rgba(255,255,255,.92); backdrop-filter:saturate(160%) blur(12px); -webkit-backdrop-filter:saturate(160%) blur(12px);
+    border-top:1px solid var(--line); padding:6px 6px max(6px,env(safe-area-inset-bottom)); z-index:50; }
+  .tab{ flex:1;border:0;background:none;color:var(--muted-2); display:flex;flex-direction:column;align-items:center;gap:2px;
+    padding:6px 4px;border-radius:10px;cursor:pointer; font-size:10px;font-weight:700;font-family:inherit;transition:.18s; }
+  .tab svg{width:19px;height:19px;}
+  .tab.active{color:var(--ink);}
+  .tab.active svg{stroke-width:2.4;}
+
+  main{padding:14px 16px 4px;}
+  .view{display:none;animation:fade .3s ease;}
+  .view.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  .section-title{ display:flex;align-items:center;gap:7px; font-size:15px;font-weight:800;margin:4px 0 4px;letter-spacing:-.01em; }
+  .section-title .dot{width:6px;height:6px;border-radius:50%;background:var(--ink);}
+  .section-sub{color:var(--muted);font-size:11.5px;margin:0 0 14px;}
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:12px 14px; margin-bottom:10px; }
+
+  /* status banner */
+  .banner{ display:flex;align-items:center;gap:7px; font-size:11px;font-weight:600; padding:8px 11px;border-radius:10px;margin-bottom:12px;
+    border:1px solid var(--line);background:var(--bg-soft);color:var(--muted); }
+  .banner.cloud{ border-color:#0a0a0a;background:#0a0a0a;color:#fff; }
+  .banner .lk{ margin-left:auto;text-decoration:underline;cursor:pointer;color:inherit;font-weight:700;white-space:nowrap; }
+  .banner .live{width:7px;height:7px;border-radius:50%;background:#fff;flex-shrink:0;animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+  .timeline{position:relative;padding-left:18px;}
+  .timeline::before{ content:"";position:absolute;left:5px;top:5px;bottom:5px;width:2px;background:var(--line); }
+  .tl-item{position:relative;margin-bottom:20px;}
+  .tl-item:last-child{margin-bottom:0;}
+  .tl-item::before{ content:"";position:absolute;left:-15px;top:6px;width:6px;height:6px;border-radius:50%; background:var(--ink);border:0; }
+  .tl-item.done::before{background:var(--ink);border-color:var(--ink);}
+  .tl-item.today::before{ width:8px;height:8px;left:-16px;top:5px;box-shadow:0 0 0 3px rgba(10,10,10,.13); }
+  .tl-date{display:flex;align-items:center;gap:7px;margin-bottom:9px;}
+  .tl-d{font-size:15px;font-weight:800;color:var(--ink);letter-spacing:-.01em;}
+  .tl-w{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg-soft);border:1px solid var(--line);padding:1px 8px;border-radius:999px;}
+  .tl-now{font-size:9.5px;font-weight:800;color:#fff;background:var(--ink);padding:2px 7px;border-radius:5px;letter-spacing:.02em;white-space:nowrap;}
+  .tl-rule{flex:1;height:1px;background:var(--line);min-width:12px;}
+  .tl-tag{font-size:9.5px;font-weight:800;color:#374151;background:#fff;border:1px solid var(--line);padding:2px 7px;border-radius:5px;letter-spacing:.02em;white-space:nowrap;}
+  .tl-items{display:flex;flex-direction:column;gap:6px;}
+  .tl-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+  .tl-owner{ flex-shrink:0;font-size:10px;font-weight:700; color:#374151;border:0; padding:2px 8px;border-radius:999px;white-space:nowrap; }
+  .tl-txt{font-size:12.5px;font-weight:600;line-height:1.45;flex:1;min-width:0;}
+  .tl-note{font-weight:500;color:var(--muted);font-size:11.5px;}
+  .tl-meet{background:var(--bg-soft);border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+  .tl-meet-head{ width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px; font-size:12px;font-weight:600;padding:8px 10px; border:0;background:none;font-family:inherit;color:var(--text);cursor:pointer;text-align:left; }
+  .tl-meet.nofold .tl-meet-head{cursor:default;}
+  .tl-caret{font-size:9px;color:var(--muted);transition:transform .2s;}
+  .tl-meet.open .tl-caret{transform:rotate(180deg);}
+  .tl-meet-body{display:none;padding:0 10px 9px;}
+  .tl-meet.open .tl-meet-body{display:block;}
+  .tl-meet-li{font-size:12px;color:var(--muted);font-weight:600;padding-left:10px;position:relative;line-height:1.6;}
+  .tl-meet-li::before{content:"·";position:absolute;left:2px;}
+
+  .group-tabs{display:flex;gap:5px;background:var(--bg-soft);border:1px solid var(--line);border-radius:11px;padding:4px;margin-bottom:12px;}
+  .group-tab{flex:1;border:0;background:none;color:var(--muted);font-size:13px;font-weight:700;font-family:inherit;padding:8px;border-radius:8px;cursor:pointer;transition:.18s;}
+  .group-tab.active{background:var(--ink);color:#fff;}
+  .team-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px;scrollbar-width:none;}
+  .team-tabs::-webkit-scrollbar{display:none;}
+  .team-tab{ display:inline-flex;align-items:center;white-space:nowrap;border:1px solid var(--line);background:#fff; color:var(--muted);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;
+    cursor:pointer;font-family:inherit;transition:.18s;flex-shrink:0; }
+  .team-tab.active{color:#374151;border-color:transparent;}
+  .tt-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;}
+
+  .progress-wrap{margin-bottom:12px;}
+  .progress-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:6px;}
+  .progress-top span:last-child{color:var(--muted);}
+  .bar{height:6px;background:var(--bg-soft);border-radius:999px;overflow:hidden;}
+  .bar > i{display:block;height:100%;width:0;background:var(--team,var(--ink));border-radius:999px;transition:width .4s ease,background .2s;}
+
+  .check-item{ display:flex;align-items:flex-start;gap:10px; padding:11px 2px;border-bottom:1px solid var(--line-soft); }
+  .check-item:last-child{border-bottom:0;}
+  .box{ flex-shrink:0;width:20px;height:20px;border-radius:6px; border:1.8px solid var(--line);margin-top:1px;
+    display:flex;align-items:center;justify-content:center;transition:.15s;cursor:pointer; }
+  .box svg{width:12px;height:12px;opacity:0;transform:scale(.5);transition:.15s;}
+  .check-item.checked .box{background:var(--team,var(--ink));border-color:var(--team,var(--ink));}
+  .check-item.checked .box svg{opacity:1;transform:scale(1);}
+  .check-item.checked .ci-text{color:var(--muted-2);text-decoration:line-through;}
+  .ci-main{flex:1;cursor:pointer;min-width:0;}
+  .ci-text{font-size:13.5px;font-weight:600;word-break:break-word;}
+  .ci-note{font-size:11px;color:var(--muted);margin-top:1px;word-break:break-word;}
+  .ci-actions{display:flex;gap:2px;flex-shrink:0;}
+  .ci-actions button{ border:0;background:none;cursor:pointer;font-size:13px;padding:3px 5px;border-radius:6px;opacity:.45;font-family:inherit; }
+  .ci-actions button:active{background:var(--bg-soft);opacity:1;}
+  .ci-actions button:disabled{opacity:.18;cursor:default;background:none;}
+  #checklistItems.reorder .check-item{background:var(--bg-soft);border-radius:8px;margin:4px 0;border-bottom:0;padding:10px 8px;touch-action:none;}
+  .check-item.dragging{opacity:.9;background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.16);position:relative;z-index:5;}
+  .check-item.drop-top{box-shadow:inset 0 2px 0 var(--ink);}
+  .check-item.drop-bottom{box-shadow:inset 0 -2px 0 var(--ink);}
+  .drag-handle{cursor:grab;font-size:17px;line-height:1;color:var(--muted-2);padding:4px 6px;touch-action:none;user-select:none;}
+
+  .edit-form{flex:1;display:flex;flex-direction:column;gap:6px;}
+  .edit-form input{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;color:var(--text);outline:none;}
+  .edit-form input:focus{border-color:var(--ink);}
+  .edit-actions{display:flex;gap:6px;}
+  .edit-actions button{border:0;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;}
+  .edit-actions .save{background:var(--ink);color:#fff;}
+  .edit-actions .cancel{background:var(--bg-soft);color:var(--muted);border:1px solid var(--line);}
+  .add-box{margin-top:12px;display:flex;flex-direction:column;gap:7px;}
+  .add-box input{ border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:13px;font-family:inherit;color:var(--text);outline:none; }
+  .add-box input:focus{border-color:var(--ink);}
+  .add-row{display:flex;gap:7px;}
+  .add-row input{flex:1;}
+  .add-row button{ border:0;background:var(--ink);color:#fff;border-radius:9px;padding:0 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0; }
+  .empty{color:var(--muted-2);font-size:12.5px;text-align:center;padding:16px 0;}
+
+  .day-tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .day-tab{ flex:1;border:1px solid var(--line);background:#fff;color:var(--muted); padding:8px 4px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:.18s;text-align:center; }
+  .day-tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .day-tab small{display:block;font-size:9.5px;font-weight:600;opacity:.75;margin-top:1px;}
+
+  .tt-row{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--line-soft);align-items:center;}
+  .tt-row:last-child{border-bottom:0;}
+  .tt-time{flex-shrink:0;width:74px;font-weight:700;font-size:11.5px;white-space:nowrap;}
+  .tt-body{flex:1;}
+  .tt-act{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:7px;white-space:pre-line;}
+  .tt-ico{font-size:14px;line-height:1;flex-shrink:0;}
+  .tt-desc{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:500;}
+  .tt-split{display:flex;gap:6px;}
+  .tt-track{flex:1;font-size:11.5px;font-weight:700;color:#374151;border-radius:8px;padding:7px 9px;white-space:pre-line;line-height:1.3;text-align:center;}
+  /* 타임테이블 전체표 */
+  .tg-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .tg{border-collapse:collapse;width:100%;table-layout:fixed;}
+  .tg th,.tg td{border:1px solid var(--line);padding:5px 4px;vertical-align:middle;text-align:center;}
+  .tg thead th{background:var(--bg-soft);font-weight:800;font-size:10px;line-height:1.3;white-space:nowrap;}
+  .tg .tg-date{font-size:9px;font-weight:600;color:var(--muted);}
+  .tg .tg-time, .tg thead th:first-child{width:36px;}
+  .tg .tg-time{font-weight:800;font-size:9.5px;white-space:nowrap;background:#fff;position:sticky;left:0;}
+  .tg thead th:first-child{position:sticky;left:0;z-index:2;}
+  .tg-cell{font-size:9.5px;font-weight:600;line-height:1.3;white-space:pre-line;}
+  .tg-clk{cursor:pointer;}
+  .tg-more{display:inline-block;margin-left:2px;font-size:8px;color:var(--muted-2);vertical-align:top;}
+  .tg td.tg-split{padding:0;}
+  .tg-split-inner{display:flex;align-items:stretch;height:100%;}
+  .tg-half{flex:1;min-width:0;padding:3px 2px;line-height:1.2;font-size:8px;font-weight:600;display:flex;align-items:center;justify-content:center;text-align:center;white-space:pre-line;}
+  .tg-half + .tg-half{border-left:1px solid rgba(0,0,0,.13);}
+  /* 타임테이블 세부 모달 */
+  #ttmTitle{white-space:pre-line;}
+  .ttm-body{font-size:13.5px;font-weight:600;color:var(--text);line-height:1.55;margin-top:4px;}
+
+  /* 멤버 — 참가자 목록 표 (식사 단위) */
+  .ptable-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .ptable{width:100%;border-collapse:collapse;min-width:340px;}
+  .ptable th,.ptable td{padding:7px 5px;text-align:center;border-bottom:1px solid var(--line-soft);font-size:11.5px;white-space:nowrap;}
+  .ptable .dayhdr{font-size:11px;font-weight:800;color:var(--text);}
+  .ptable .mealhdr{font-size:10px;font-weight:700;color:var(--muted);}
+  .ptable .daystart{border-left:1px solid var(--line);}
+  .ptable th.nmh, .ptable td.nm{position:sticky;left:0;background:#fff;text-align:left;font-weight:700;font-size:12px;padding-left:2px;box-shadow:1px 0 0 var(--line);}
+  .ptable td.on{color:var(--ink);font-weight:800;font-size:13px;}
+  .ptable td.off{color:var(--muted-2);}
+  .ptable tr.grp td{background:var(--bg-soft);text-align:left;font-size:10.5px;font-weight:800;color:var(--muted);padding:6px 8px;border-bottom:0;}
+  /* 멤버 — 조직도 */
+  .org-top{display:flex;flex-direction:column;align-items:center;}
+  .org-unit{display:flex;flex-direction:column;text-align:center;}
+  .org-top .org-unit{min-width:170px;}
+  .org-tname{border-radius:7px;padding:5px 12px;font-size:12px;font-weight:600;color:#1f2937;}
+  .org-roles{margin-top:6px;display:flex;flex-direction:column;gap:4px;}
+  .org-rolebox{border:1px solid var(--line);border-radius:6px;padding:5px 9px;background:#fff;text-align:left;font-size:11px;font-weight:500;color:#374151;}
+  .org-rolebox b{font-weight:500;color:var(--muted);margin-right:5px;}
+  .org-rolebox.lead{background:var(--bg-soft);border-color:var(--muted-2);}
+  .org-line{width:2px;height:12px;background:var(--line);}
+  .org-conn{position:relative;height:14px;}
+  .org-conn-h{position:absolute;top:0;left:25%;right:25%;height:2px;background:var(--line);}
+  .org-conn-drop{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--line);}
+  .org-teams2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
+  .hint{font-size:11px;color:var(--muted-2);text-align:center;padding:6px 16px 0;}
+  .footer-note{text-align:center;color:var(--muted-2);font-size:11px;padding:18px;}
+  .reset-btn{ background:none;border:1px solid var(--line);color:var(--muted); font-size:11px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer;font-family:inherit; }
+  .reset-btn.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .center{display:flex;justify-content:center;gap:8px;margin-top:4px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar"><span class="lab">수련회까지</span> <b id="cdNum">–</b> <span id="cdLabel"></span></div>
+
+  <header>
+    <button class="bell" id="bellBtn" aria-label="알림">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <span class="bell-badge" id="bellBadge" hidden></span>
+    </button>
+    <p class="eyebrow">2026 흰돌청년부 하계 아웃리치</p>
+    <h1>Dreamer</h1>
+    <p class="verse">꿈꾸는 자가 온다</p>
+    <div class="meta">
+      <span class="chip">📅 <b>7/29 – 8/1</b></span>
+      <span class="chip">📍 <b>경북 문경</b></span>
+      <button class="chip chip-btn" id="lodgeBtn">🏠 <b>농선재 3박</b> <span class="chip-arrow">ⓘ</span></button>
+      <button class="chip chip-btn" id="feeBtn">💳 <b>회비</b> <span class="chip-arrow">ⓘ</span></button>
+    </div>
+  </header>
+
+
+  <main>
+    <!-- 일정 -->
+    <section class="view active" id="view-schedule">
+      <div class="section-title"><span class="dot"></span>준비 일정</div>
+      <p class="section-sub">전체모임·리더십 모임 일정은 변경될 수 있어요</p>
+      <div class="card"><div class="timeline" id="scheduleList"></div></div>
+    </section>
+
+    <!-- 체크리스트 -->
+    <section class="view" id="view-checklist">
+      <div class="section-title"><span class="dot"></span>팀별 체크리스트</div>
+      <p class="section-sub">항목을 직접 추가하거나 수정할 수 있어요</p>
+
+      <div class="banner" id="banner"></div>
+      <div class="group-tabs" id="groupTabs"></div>
+      <div class="team-tabs" id="teamTabs"></div>
+
+      <div class="card">
+        <div class="progress-wrap">
+          <div class="progress-top"><span id="teamName">팀</span><span id="progressLabel">0 / 0</span></div>
+          <div class="bar"><i id="progressBar"></i></div>
+        </div>
+        <div id="checklistItems"></div>
+        <div class="add-box">
+          <input id="newItem" type="text" placeholder="할 일 추가…" maxlength="80" />
+          <div class="add-row">
+            <input id="newNote" type="text" placeholder="세부 내용 (선택)" maxlength="80" />
+            <button id="addBtn">추가</button>
+          </div>
+        </div>
+      </div>
+      <div class="center">
+        <button class="reset-btn" id="reorderBtn">↕ 순서 변경</button>
+        <button class="reset-btn" id="resetTeam">이 팀 체크 초기화</button>
+      </div>
+    </section>
+
+    <!-- 타임테이블 -->
+    <section class="view" id="view-timetable">
+      <div class="section-title"><span class="dot"></span>당일 타임테이블</div>
+      <p class="section-sub">3박 4일 전체 일정이에요 (현장 상황에 따라 바뀔 수 있어요)</p>
+      <div id="ttGridWrap">
+        <div id="ttGrid"></div>
+      </div>
+      <p class="hint">표 칸에 ⓘ 표시가 있으면 눌러서 세부 내용을 볼 수 있어요</p>
+    </section>
+
+    <!-- ════ 멤버 ════ -->
+    <section class="view" id="view-member">
+      <div class="section-title"><span class="dot"></span>멤버</div>
+      <p class="section-sub">참가자 목록과 조직도예요</p>
+
+      <div class="group-tabs" id="memberTabs"></div>
+
+      <div id="rosterPanel">
+        <div class="team-tabs" id="partTeamTabs"></div>
+        <div class="card" id="rosterTable"></div>
+        <p class="hint" id="rosterCount"></p>
+      </div>
+
+      <div id="orgPanel" hidden>
+        <p class="section-sub" id="orgNote"></p>
+        <div class="card" id="orgChart"></div>
+      </div>
+    </section>
+
+    <p class="footer-note">Dreamer · 꿈꾸는 자가 온다 🙏<br>문의는 아웃리치 준비팀 단톡방으로!</p>
+  </main>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="schedule">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>일정
+    </button>
+    <button class="tab" data-view="checklist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>체크리스트
+    </button>
+    <button class="tab" data-view="timetable">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>타임테이블
+    </button>
+    <button class="tab" data-view="member">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>멤버
+    </button>
+  </nav>
+
+  <!-- 숙소 상세 (농선재) -->
+  <div class="modal" id="lodgeModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>🏠 숙소 · 농선재</span>
+        <button class="modal-x" id="lodgeClose">✕</button>
+      </div>
+      <p class="m-sub">가은읍 내 · 교회에서 차량 5분 · 3박</p>
+      <div class="m-row"><b>1층 (남성)</b><span>거실 + 방 3개</span></div>
+      <div class="m-row"><b>2층 (여성)</b><span>거실 + 방 1개</span></div>
+      <div class="m-row"><b>침구</b><span>개인 침구 준비되어 있음</span></div>
+      <div class="m-row"><b>세탁</b><span>세탁실 있음</span></div>
+      <div class="m-row"><b>세면·화장실</b><span>숙소 내부 3개 · 교회 내 화장실</span></div>
+    </div>
+  </div>
+
+  <!-- 회비 안내 -->
+  <div class="modal" id="feeModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>💳 회비 안내</span>
+        <button class="modal-x" id="feeClose">✕</button>
+      </div>
+      <p class="m-sub" id="feeNote"></p>
+      <div id="feeRows"></div>
+      <div class="m-account" id="feeAccount"></div>
+    </div>
+  </div>
+
+  <!-- 알림 -->
+  <div class="modal" id="notiModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>🔔 알림</span>
+        <button class="modal-x" id="notiClose">✕</button>
+      </div>
+      <div id="notiList"></div>
+    </div>
+  </div>
+
+  <!-- 타임테이블 칸 세부 내용 -->
+  <div class="modal" id="ttModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span id="ttmTitle"></span>
+        <button class="modal-x" id="ttmClose">✕</button>
+      </div>
+      <p class="m-sub" id="ttmTime"></p>
+      <div class="ttm-body" id="ttmBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase 클라이언트 (협업 모드용) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ===========================================================
+   ① 협업 설정 — 아래 두 줄에 Supabase 키를 붙여넣으면
+      자동으로 "실시간 공유 모드"가 켜집니다.
+      비워두면 이 기기에만 저장되는 "로컬 모드"로 동작해요.
+      설정 방법은 같은 폴더의 SETUP.md 파일을 보세요.
+   =========================================================== */
+const SUPABASE_URL      = "https://cvhrrfajfqukieprnxds.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN2aHJyZmFqZnF1a2llcHJueGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1MDQ1ODUsImV4cCI6MjA5NjA4MDU4NX0.FSHHXlWi2Fce1mPM_wqsHgJqIvwnkQyTzA2irA68rGk";
+
+/* ===========================================================
+   ② 기본 내용 — 여기만 고치면 내용이 바뀝니다.
+   =========================================================== */
+const RETREAT_DATE = "2026-07-29";
+
+// 회비 안내 (확정되면 아래 금액·계좌만 바꾸면 됩니다)
+const FEE = {
+  note: "금액·계좌는 확정 후 업데이트 예정이에요.",
+  rows: [
+    { label:"전참 (3박 4일)",   amount:"미정" },
+    { label:"2박 3일",          amount:"미정" },
+    { label:"1박 2일",          amount:"미정" },
+    { label:"당일 참석",         amount:"미정" },
+  ],
+  account: "",   // 예: "○○은행 000-0000-0000 (예금주 ○○○)"
+};
+
+// 업데이트 알림 (수정할 때마다 맨 위에 한 줄씩 추가하면 됩니다)
+const UPDATES = [
+  { id:"u-0604b", date:"6/4", text:"타임테이블을 전체표(셀 병합)로 정리했어요" },
+  { id:"u-0604a", date:"6/4", text:"멤버 페이지(참가자 목록·조직도)를 추가했어요" },
+  { id:"u-0603",  date:"6/3", text:"체크리스트 협업·순서 변경(드래그) 기능을 추가했어요" },
+];
+
+const SCHEDULE = [
+  { date:"6/07 (일)", items:[
+    { t:"각 팀별 전참 인원 확인", n:"주요 사역 리더진 확인", owner:"전체팀" },
+  ]},
+  { date:"6/13 (토)", items:[
+    { t:"홍보 포스터 완료 및 개시", owner:"홍보팀" },
+  ]},
+  { date:"6/14 (일)", tag:"비마켓", items:[
+    { t:"최종 참여자 조사", owner:"임원" },
+    { t:"현수막 완료 및 주문", owner:"홍보팀" },
+    { t:"1차 사역계획서 완료", owner:"성경학교·수련회팀" },
+  ]},
+  { date:"6/21 (일)", items:[
+    { t:"홍보용 전단지 완료 및 주문", owner:"홍보팀" },
+    { t:"최종 사역계획서 완료", owner:"성경학교·수련회팀" },
+    { meeting:"3:30~ 아웃리치팀 전체모임", sub:[
+      "아웃리치 계획 및 팀별 프로그램 설명",
+      "팀별 리더진 확정",
+      "팀원 신청 및 역할 분배",
+    ]},
+    { meeting:"4:30~ 리더십 모임", sub:[
+      "팀별 진행현황 공유",
+    ]},
+  ]},
+  { date:"6/28 (일)", items:[
+    { t:"저녁 집회 찬양 플레이리스트 공유", owner:"예배팀" },
+    { t:"인/아웃 차량 조사", owner:"임원" },
+    { t:"회비 광고", owner:"임원" },
+    { meeting:"3:30~ 아웃리치팀 전체모임", sub:[
+      "마음 모으기",
+    ]},
+    { meeting:"4:30~ 리더십 모임", sub:[] },
+  ]},
+  { date:"7/12 (일)", items:[
+    { meeting:"3:30~ 아웃리치팀 전체모임", sub:[
+      "팀별 프로그램 운영 및 진행 공유",
+    ]},
+    { meeting:"4:30~ 리더십 모임", sub:[] },
+  ]},
+  { date:"7/19 (일)", items:[
+    { t:"전체/성경학교/수련회용 타임테이블 완료", owner:"홍보팀" },
+    { t:"팀별 필요 작업물 제작 완료", owner:"전체팀" },
+    { t:"물품 구입 및 준비 완료", owner:"전체팀" },
+    { meeting:"3:30~ 아웃리치팀 전체모임", sub:[] },
+    { meeting:"4:30~ 리더십 모임", sub:[] },
+  ]},
+  { date:"7/26 (일)", items:[
+    { t:"팀별 패킹", owner:"전체팀" },
+    { meeting:"3:30~ 아웃리치팀 전체모임", sub:[] },
+    { meeting:"4:30~ 리더십 모임", sub:[
+      "마무리 점검",
+    ]},
+  ]},
+  { date:"7/29 (수)", items:[
+    { t:"아웃리치 출발 🚌", n:"오전 출발 → 가은제일교회 도착" },
+  ]},
+];
+
+// 상위 그룹 탭
+const GROUPS = [
+  { id:"admin",    name:"행정팀" },
+  { id:"ministry", name:"사역팀" },
+];
+
+// 팀 정의 (그룹 / 지정 파스텔 컬러)
+const TEAMS = [
+  // 행정팀
+  { id:"exec",   name:"임원",         group:"admin",    color:"#dde1e8" },
+  { id:"promo",  name:"홍보팀",       group:"admin",    color:"#f8d0e6" },
+  { id:"worship",name:"예배팀",       group:"admin",    color:"#e3d4f5" },
+  { id:"media",  name:"방송팀",       group:"admin",    color:"#cce7ef" },
+  { id:"mission",name:"선교팀",       group:"admin",    color:"#f8dcc4" },
+  // 사역팀
+  { id:"pastor", name:"목사님",       group:"ministry", color:"#f4e4c1" },
+  { id:"lead",   name:"총괄팀",       group:"ministry", color:"#f5cdd8" },
+  { id:"bible",  name:"성경학교팀",   group:"ministry", color:"#cdddf7" },
+  { id:"camp",   name:"청소년수련회팀",group:"ministry", color:"#cce9da" },
+];
+
+// 준비 일정의 담당 태그 컬러 (위 팀명은 자동 매칭, 복합·전체 명칭만 지정)
+const OWNER_COLORS = {
+  "성경학교·수련회팀":"#cdddf7",
+  "성경학교·수련회·운영팀":"#cce8ed",
+  "전체팀":"#d9dde5",
+};
+const ownerColor = n => OWNER_COLORS[n] || (TEAMS.find(t=>t.name===n)||{}).color || "#64748b";
+
+// 처음 한 번만 쓰이는 기본 항목 (로컬 모드 / 빈 DB 시드용)
+const DEFAULT_ITEMS = [
+  // [행정팀] 임원
+  {team:"exec",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"exec",text:"최종 참여자 조사",note:"6/14"},
+  {team:"exec",text:"인/아웃 차량 조사",note:"6/28"},
+  {team:"exec",text:"회비 걷기 · 재정 관리",note:""},
+  {team:"exec",text:"전체 · 리더 회의 진행",note:""},
+  {team:"exec",text:"마무리 점검 · 패킹 총괄",note:"7/26"},
+  // [행정팀] 홍보팀
+  {team:"promo",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"promo",text:"홍보 포스터 완료 및 개시",note:"6/13"},
+  {team:"promo",text:"현수막 완료 및 주문",note:"6/14"},
+  {team:"promo",text:"홍보용 전단지 완료 및 주문",note:"6/21"},
+  {team:"promo",text:"전체/성경학교/수련회용 타임테이블 완료",note:"7/19"},
+  {team:"promo",text:"핸드북 제작",note:"7/19"},
+  // [행정팀] 예배팀 (찬양 박찬영)
+  {team:"worship",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"worship",text:"예배 찬양 콘티 확정",note:"개회·집회·기도회"},
+  {team:"worship",text:"저녁 집회 찬양 플레이리스트 공유",note:"6/28"},
+  {team:"worship",text:"특송 준비",note:""},
+  {team:"worship",text:"악기교실 1~3 커리큘럼",note:""},
+  {team:"worship",text:"악기 점검 · 관리",note:""},
+  {team:"worship",text:"달빛 마을 콘서트 준비",note:"7/29 수요예배"},
+  // [행정팀] 방송팀 (김지수)
+  {team:"media",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"media",text:"음향 장비 점검",note:""},
+  {team:"media",text:"영상 장비 준비",note:""},
+  {team:"media",text:"집회 · 콘서트 셋업 계획",note:""},
+  // [행정팀] 선교팀
+  {team:"mission",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"mission",text:"현지 교회 연락 · 협력",note:"가은제일·농암제일·영순중앙"},
+  {team:"mission",text:"마을 잔치 · 전도 프로그램 기획",note:""},
+  {team:"mission",text:"전도 물품 준비",note:""},
+  {team:"mission",text:"현지 사역 동선 점검",note:""},
+  {team:"mission",text:"선교 보고 · 간증 정리",note:""},
+  // [사역팀] 목사님
+  {team:"pastor",text:"집회 말씀 준비",note:"1~3집회"},
+  {team:"pastor",text:"새벽 묵상 · 경건회 인도",note:""},
+  {team:"pastor",text:"파송 예배 · 축도",note:""},
+  {team:"pastor",text:"현지 교회 목사님과 협의",note:""},
+  {team:"pastor",text:"사역 방향 · 영적 점검",note:""},
+  // [사역팀] 총괄팀 (강연수)
+  {team:"lead",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"lead",text:"박영만 목사님(가은제일교회) 사전 협의",note:"일정·동선"},
+  {team:"lead",text:"사역 전체 흐름 · 진행 관리",note:""},
+  {team:"lead",text:"기도회 인도 준비",note:""},
+  {team:"lead",text:"팀별 사역계획서 취합",note:"6/14"},
+  {team:"lead",text:"핸드북 내용 총괄",note:""},
+  // [사역팀] 성경학교팀 (강은수)
+  {team:"bible",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"bible",text:"최종 사역계획서 완료",note:"6/14"},
+  {team:"bible",text:"성경학교 1~5 커리큘럼 기획",note:"유치·유년·초등부"},
+  {team:"bible",text:"달란트 시장 준비",note:""},
+  {team:"bible",text:"대상 인원 파악",note:"가은제일·농암제일·영순중앙"},
+  {team:"bible",text:"교재 · 교구 준비",note:""},
+  {team:"bible",text:"물품 구입 및 준비",note:"7/19"},
+  // [사역팀] 청소년수련회팀 (김세현)
+  {team:"camp",text:"팀 내 전참인원 확인 및 역할 분배",note:""},
+  {team:"camp",text:"최종 사역계획서 완료",note:"6/14"},
+  {team:"camp",text:"청소년 수련회 1·2 프로그램 기획",note:""},
+  {team:"camp",text:"대상 인원 확인",note:"중등6·고등6·대학생3"},
+  {team:"camp",text:"집회 · 조모임 준비",note:""},
+  {team:"camp",text:"물품 구입 및 준비",note:"7/19"},
+];
+
+// time~end = 시간 범위, icon = 앞 아이콘, desc = (구 태그 자리) 부가 설명
+const TIMETABLE = [
+  { day:"1일차", date:"7/29 수", rows:[
+    { time:"07:00", end:"07:30", icon:"⛪", act:"교회 집합", desc:"" },
+    { time:"07:30", end:"12:00", icon:"🚌", act:"출발", desc:"출발 시간 변경 예정" },
+    { time:"12:00", end:"13:00", icon:"🍽️", act:"도착 · 점심식사", desc:"" },
+    { time:"13:00", end:"15:00", icon:"🙏", act:"개회예배 · 정비", desc:"짐 정리" },
+    { time:"15:00", end:"17:00", icon:"📋", act:"각 팀 준비 · 홍보", desc:"팀별 홍보 위치로 이동 및 사역데코" },
+    { time:"17:00", end:"18:00", icon:"🚿", act:"세면 및 휴식", desc:"" },
+    { time:"18:00", end:"19:00", icon:"🍽️", act:"저녁식사", desc:"" },
+    { time:"19:00", end:"22:00", icon:"🎵", act:"수요예배\n달빛 마을 콘서트", desc:"" },
+    { time:"22:00", end:"", icon:"😴", act:"취침", desc:"" },
+  ]},
+  { day:"2일차", date:"7/30 목", rows:[
+    { time:"07:30", end:"08:00", icon:"⏰", act:"기상", desc:"" },
+    { time:"08:00", end:"09:00", icon:"📖", act:"아침묵상", desc:"" },
+    { time:"09:00", end:"10:00", icon:"🍽️", act:"아침식사", desc:"" },
+    { time:"10:00", end:"12:00", split:[ {track:"성경",act:"성경학교\n프로그램"}, {track:"악기",act:"악기교실 1"} ] },
+    { time:"12:00", end:"13:00", icon:"🍽️", act:"점심식사", desc:"" },
+    { time:"13:00", end:"17:00", split:[ {track:"성경",act:"성경학교\n프로그램"}, {track:"수련",act:"수련회\n프로그램"} ] },
+    { time:"17:00", end:"19:00", icon:"🍽️", act:"저녁식사", desc:"" },
+    { time:"19:00", end:"21:00", icon:"🙏", act:"집회 / 기도회", desc:"" },
+    { time:"21:00", end:"22:00", icon:"💬", act:"피드백", desc:"" },
+    { time:"22:00", end:"", icon:"😴", act:"취침", desc:"" },
+  ]},
+  { day:"3일차", date:"7/31 금", rows:[
+    { time:"07:30", end:"08:00", icon:"⏰", act:"기상", desc:"" },
+    { time:"08:00", end:"09:00", icon:"📖", act:"아침묵상", desc:"" },
+    { time:"09:00", end:"10:00", icon:"🍽️", act:"아침식사", desc:"" },
+    { time:"10:00", end:"12:00", split:[ {track:"성경",act:"성경학교\n프로그램"}, {track:"악기",act:"악기교실 2"} ] },
+    { time:"12:00", end:"13:00", icon:"🍽️", act:"점심식사", desc:"" },
+    { time:"13:00", end:"17:00", split:[ {track:"성경",act:"성경학교\n프로그램"}, {track:"수련",act:"수련회\n프로그램"} ] },
+    { time:"17:00", end:"19:00", icon:"🍽️", act:"저녁식사", desc:"" },
+    { time:"19:00", end:"21:00", icon:"🙏", act:"집회 / 기도회", desc:"" },
+    { time:"21:00", end:"22:00", icon:"💬", act:"피드백", desc:"" },
+    { time:"22:00", end:"", icon:"😴", act:"취침", desc:"" },
+  ]},
+  { day:"4일차", date:"8/1 토", rows:[
+    { time:"07:30", end:"08:00", icon:"⏰", act:"기상", desc:"" },
+    { time:"08:00", end:"09:00", icon:"🍽️", act:"아침식사", desc:"" },
+    { time:"09:00", end:"12:00", split:[ {track:"달란",act:"달란트 시장"}, {track:"악기",act:"악기교실"} ] },
+    { time:"12:00", end:"13:00", icon:"🍽️", act:"점심식사", desc:"" },
+    { time:"13:00", end:"14:00", icon:"🧹", act:"뒷정리", desc:"" },
+    { time:"14:00", end:"", icon:"🚌", act:"출발 · 귀가", desc:"" },
+  ]},
+];
+
+// 참가자 목록 — 두 팀으로만 구분
+const PART_TEAMS = ["성경학교팀", "청소년부 수련회팀"];
+// 식사 단위(아침/점심/저녁) 칸 — 도착/귀가 일정에 맞춰 첫날 아침·마지막날 저녁은 제외
+const PART_SCHEDULE = [
+  { day:"7/29", meals:[ {id:"29L",label:"점심"}, {id:"29D",label:"저녁"} ] },
+  { day:"7/30", meals:[ {id:"30B",label:"아침"}, {id:"30L",label:"점심"}, {id:"30D",label:"저녁"} ] },
+  { day:"7/31", meals:[ {id:"31B",label:"아침"}, {id:"31L",label:"점심"}, {id:"31D",label:"저녁"} ] },
+  { day:"8/1",  meals:[ {id:"1B",label:"아침"}, {id:"1L",label:"점심"} ] },
+];
+const PART_SLOTS = [];
+PART_SCHEDULE.forEach(d => d.meals.forEach((m,i) => PART_SLOTS.push({ id:m.id, label:m.label, day:d.day, first:i===0 })));
+const ALL_SLOTS = PART_SLOTS.map(s => s.id);
+// attend: 참석하는 식사 id 배열 (전부면 전참 / 일부면 부분참 자동 분류)
+const MEMBERS = [
+  { name:"강은수",  team:"성경학교팀",       attend: ALL_SLOTS },
+  { name:"참가자 A", team:"성경학교팀",       attend: ALL_SLOTS },
+  { name:"참가자 B", team:"성경학교팀",       attend:["29D","30B","30L","30D"] }, // 7/29 저녁~7/30 저녁
+  { name:"김세현",  team:"청소년부 수련회팀", attend: ALL_SLOTS },
+  { name:"참가자 C", team:"청소년부 수련회팀", attend:["30B","30L","30D","31B","31L","31D"] },
+];
+
+// 조직도 (아웃리치 기간 편성)
+const ORG = {
+  note: "이 조직도는 아웃리치 기간에만 적용돼요",
+  top: { team:"총괄팀", roles:[ {role:"팀장",name:"강연수"}, {role:"회계",name:"김희규"}, {role:"하스피",name:""}, {role:"데코(제작)",name:""}, {role:"수송",name:""} ] },
+  teams: [
+    { team:"성경학교팀",   roles:[ {role:"팀장",name:"강은수"}, {role:"구매",name:""}, {role:"수송",name:""}, {role:"데코(제작)",name:""}, {role:"촬영",name:""} ] },
+    { team:"청소년수련회팀", roles:[ {role:"팀장",name:"김세현"}, {role:"구매",name:""}, {role:"수송",name:""}, {role:"데코(제작)",name:""}, {role:"촬영",name:""} ] },
+  ],
+};
+
+/* ===========================================================
+   ③ 동작 코드 (수정 불필요)
+   =========================================================== */
+const $ = s => document.querySelector(s);
+const checkSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>';
+const esc = s => (s||"").replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hasCloud = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+let ALL_ITEMS = [];
+let activeGroup = GROUPS[0].id;
+let activeTeam = TEAMS.find(t => t.group===activeGroup).id;
+let reorderMode = false;
+let editingId = null;
+let store;
+
+/* ── Countdown ── */
+(function(){
+  const target = new Date(RETREAT_DATE + "T00:00:00");
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((target - today) / 86400000);
+  const num = $("#cdNum"), lab = $("#cdLabel");
+  if(diff > 0){ num.textContent = 'D-'+diff; lab.textContent = ""; }
+  else if(diff === 0){ num.textContent = 'D-DAY'; lab.textContent = "드디어 오늘! 🎉"; }
+  else { num.textContent = 'D+'+Math.abs(diff); lab.textContent = "은혜로운 수련회였어요"; }
+})();
+
+/* ── Schedule ── */
+// 오늘이 속한 주(월~일) 계산 → 해당 주의 일정에 "당일" 표시
+const SCHED_YEAR = +RETREAT_DATE.slice(0,4);
+const _t = new Date(); _t.setHours(0,0,0,0);
+const _wkStart = new Date(_t); _wkStart.setDate(_t.getDate() - ((_t.getDay()+6)%7));
+const _wkEnd = new Date(_wkStart); _wkEnd.setDate(_wkStart.getDate()+6);
+function inThisWeek(dstr){
+  const p = dstr.split(' ')[0].split('/'); if(p.length<2) return false;
+  const d = new Date(SCHED_YEAR, +p[0]-1, +p[1]); d.setHours(0,0,0,0);
+  return d>=_wkStart && d<=_wkEnd;
+}
+$("#scheduleList").innerHTML = SCHEDULE.map(s => `
+  <div class="tl-item${inThisWeek(s.date)?' today':''}">
+    <div class="tl-date">
+      <span class="tl-d">${esc(s.date.split(' ')[0])}</span>
+      ${s.date.split(' ')[1]?`<span class="tl-w">${esc(s.date.split(' ').slice(1).join(' ').replace(/[()]/g,''))}</span>`:''}
+      <span class="tl-rule"></span>
+      ${inThisWeek(s.date)?`<span class="tl-now">당일</span>`:''}
+      ${s.tag?`<span class="tl-tag">${esc(s.tag)}</span>`:''}
+    </div>
+    <div class="tl-items">
+      ${s.items.map(it => {
+        if(it.meeting){
+          const has = it.sub && it.sub.length;
+          return `<div class="tl-meet${has?'':' nofold'}">
+            <button class="tl-meet-head" type="button">
+              <span>${esc(it.meeting)}</span>
+              ${has?`<span class="tl-caret">▾</span>`:''}
+            </button>
+            ${has?`<div class="tl-meet-body">${it.sub.map(x=>`<div class="tl-meet-li">${esc(x)}</div>`).join("")}</div>`:''}
+          </div>`;
+        }
+        return `<div class="tl-line">
+          ${it.owner?`<span class="tl-owner" style="background:${ownerColor(it.owner)}">${esc(it.owner)}</span>`:''}
+          <span class="tl-txt">${esc(it.t)}${it.n?` <span class="tl-note">· ${esc(it.n)}</span>`:''}</span>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`).join("");
+
+$("#scheduleList").addEventListener("click", e => {
+  const h = e.target.closest(".tl-meet-head"); if(!h) return;
+  const m = h.parentElement;
+  if(!m.classList.contains("nofold")) m.classList.toggle("open");
+});
+
+/* ── Timetable (전체표) ── */
+// 분할 칸 색: 두 가지(성경학교팀 / 청소년수련회팀)로만 — 왼쪽/오른쪽 순
+const TEAM_C = ["#cdddf7", "#cce9da"];
+function renderTTGrid(){
+  const times = [...new Set(TIMETABLE.flatMap(d => d.rows.map(r => r.time)))].sort();
+  const ti = t => times.indexOf(t);
+  // 일자별로 각 시간 행을 채울 계획 만들기 (1시간 이상은 rowspan으로 합셀)
+  const plans = TIMETABLE.map(d => {
+    const arr = new Array(times.length).fill("empty");
+    d.rows.forEach(r => {
+      const i = ti(r.time);
+      const span = (r.end && ti(r.end) > i) ? ti(r.end) - i : 1;
+      arr[i] = { r, span };
+      for(let k=i+1; k<i+span && k<times.length; k++) arr[k] = "cov";
+    });
+    return arr;
+  });
+  const header = `<tr><th>시간</th>${TIMETABLE.map(d =>
+    `<th>${esc(d.day)}<br><span class="tg-date">${esc(d.date.split(' ')[0])}</span></th>`).join("")}</tr>`;
+  const body = times.map((t,i) => {
+    const cells = plans.map(plan => {
+      const c = plan[i];
+      if(c==="cov") return "";
+      if(c==="empty") return `<td></td>`;
+      const r = c.r;
+      const rs = c.span>1 ? ` rowspan="${c.span}"` : "";
+      if(r.split){
+        const half = (s,idx) => `<div class="tg-half" style="background:${TEAM_C[idx]||'#dee2e9'}">${s.act?esc(s.act):'미정'}</div>`;
+        return `<td class="tg-split"${rs}><div class="tg-split-inner">${r.split.map(half).join("")}</div></td>`;
+      }
+      const time = r.time + (r.end?`~${r.end}`:"");
+      return `<td class="tg-cell${r.desc?' tg-clk':''}"${rs}${r.desc?` data-title="${esc(r.act)}" data-time="${esc(time)}" data-desc="${esc(r.desc)}"`:''}>${esc(r.act)}${r.desc?`<span class="tg-more">ⓘ</span>`:''}</td>`;
+    }).join("");
+    return `<tr><td class="tg-time">${esc(t)}</td>${cells}</tr>`;
+  }).join("");
+  $("#ttGrid").innerHTML = `<div class="tg-wrap"><table class="tg"><thead>${header}</thead><tbody>${body}</tbody></table></div>`;
+}
+renderTTGrid();
+const ttModal = $("#ttModal");
+$("#ttGrid").addEventListener("click", e => {
+  const c = e.target.closest(".tg-clk"); if(!c) return;
+  $("#ttmTitle").textContent = c.dataset.title || "";
+  $("#ttmTime").textContent = c.dataset.time || "";
+  $("#ttmBody").textContent = c.dataset.desc || "";
+  ttModal.hidden = false;
+});
+$("#ttmClose").addEventListener("click", () => { ttModal.hidden = true; });
+ttModal.addEventListener("click", e => { if(e.target===ttModal) ttModal.hidden = true; });
+
+/* ── 알림 (다가오는 일정 + 업데이트 내역) ── */
+const SEEN_KEY = "outreach2026.seenNotifs";
+function upcomingSchedule(){
+  const out = [];
+  SCHEDULE.forEach(s => {
+    const p = s.date.split(' ')[0].split('/'); if(p.length<2) return;
+    const d = new Date(SCHED_YEAR, +p[0]-1, +p[1]); d.setHours(0,0,0,0);
+    const diff = Math.round((d - _t) / 86400000);
+    if(diff>=0 && diff<=7){
+      const tasks = s.items.filter(it => it.t).map(it => it.t);
+      out.push({ id:"s"+s.date.replace(/\s/g,''), days:diff,
+        title:`${s.date.split(' ')[0]} · ${diff===0?'오늘':'D-'+diff}`,
+        body: tasks.slice(0,4).join(', ') });
+    }
+  });
+  return out;
+}
+function notifIds(){ return [...UPDATES.map(u=>u.id), ...upcomingSchedule().map(s=>s.id)]; }
+function seenSet(){ try{ return new Set(JSON.parse(localStorage.getItem(SEEN_KEY)||"[]")); }catch(_){ return new Set(); } }
+function updateBadge(){
+  const seen = seenSet();
+  const n = notifIds().filter(id => !seen.has(id)).length;
+  const b = $("#bellBadge");
+  if(n>0){ b.textContent = n>9?"9+":n; b.hidden = false; } else b.hidden = true;
+}
+function renderNotis(){
+  const scs = upcomingSchedule();
+  let html = "";
+  if(scs.length){
+    html += `<div class="noti-sec">⏰ 다가오는 일정</div>`;
+    html += scs.map(s => `<div class="noti-item"><div class="noti-t">${esc(s.title)}</div>${s.body?`<div class="noti-b">${esc(s.body)}</div>`:''}</div>`).join("");
+  }
+  html += `<div class="noti-sec">📢 업데이트</div>`;
+  html += UPDATES.map(u => `<div class="noti-item"><div class="noti-b"><b>${esc(u.date)}</b> ${esc(u.text)}</div></div>`).join("");
+  $("#notiList").innerHTML = html;
+}
+const notiModal = $("#notiModal");
+$("#bellBtn").addEventListener("click", () => {
+  renderNotis(); notiModal.hidden = false;
+  localStorage.setItem(SEEN_KEY, JSON.stringify(notifIds())); updateBadge();
+});
+$("#notiClose").addEventListener("click", () => { notiModal.hidden = true; });
+notiModal.addEventListener("click", e => { if(e.target===notiModal) notiModal.hidden = true; });
+updateBadge();
+
+/* ── Member (참가자 목록 / 조직도) ── */
+let memberTab = "roster";
+let activePartTeam = PART_TEAMS[0];
+const teamColor = name => (TEAMS.find(t=>t.name===name)||{}).color || "#e5e7eb";
+// hex를 흰색 쪽으로 섞어 더 연하게 (amt: 0~1)
+function lighten(hex, amt){
+  const n = parseInt((hex||"#cccccc").slice(1), 16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  r=Math.round(r+(255-r)*amt); g=Math.round(g+(255-g)*amt); b=Math.round(b+(255-b)*amt);
+  return `rgb(${r},${g},${b})`;
+}
+function renderMemberTabs(){
+  const tabs = [{id:"roster",name:"참가자 목록"},{id:"org",name:"조직도"}];
+  $("#memberTabs").innerHTML = tabs.map(t =>
+    `<button class="group-tab ${t.id===memberTab?'active':''}" data-mtab="${t.id}">${t.name}</button>`).join("");
+  $("#rosterPanel").hidden = memberTab!=="roster";
+  $("#orgPanel").hidden = memberTab!=="org";
+}
+const isFull = m => ALL_SLOTS.every(id => (m.attend||[]).includes(id));
+function rosterRows(members){
+  return members.map(m => {
+    const set = new Set(m.attend||[]);
+    return `<tr><td class="nm">${esc(m.name)}</td>${PART_SLOTS.map(s =>
+      `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}</tr>`;
+  }).join("");
+}
+function renderRoster(){
+  $("#partTeamTabs").innerHTML = PART_TEAMS.map(t =>
+    `<button class="team-tab ${t===activePartTeam?'active':''}" data-pteam="${t}">${esc(t)}</button>`).join("");
+  const all = MEMBERS.filter(m => m.team===activePartTeam);
+  const full = all.filter(isFull);
+  const part = all.filter(m => !isFull(m));
+  const span = PART_SLOTS.length + 1;
+  const dayHdr = PART_SCHEDULE.map(d => `<th colspan="${d.meals.length}" class="dayhdr daystart">${esc(d.day)}</th>`).join("");
+  const mealHdr = PART_SLOTS.map(s => `<th class="mealhdr ${s.first?'daystart':''}">${esc(s.label)}</th>`).join("");
+  const head = `<thead><tr><th class="nmh" rowspan="2">이름</th>${dayHdr}</tr><tr>${mealHdr}</tr></thead>`;
+  let body = "";
+  if(full.length) body += `<tr class="grp"><td colspan="${span}">전참 · ${full.length}명</td></tr>${rosterRows(full)}`;
+  if(part.length) body += `<tr class="grp"><td colspan="${span}">부분참 · ${part.length}명</td></tr>${rosterRows(part)}`;
+  $("#rosterTable").innerHTML = all.length
+    ? `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
+    : `<div class="empty">명단이 비어 있어요.</div>`;
+  $("#rosterCount").textContent = `${activePartTeam} ${all.length}명 · 전참 ${full.length} / 부분참 ${part.length}`;
+}
+function renderOrg(){
+  $("#orgNote").textContent = ORG.note || "";
+  const unit = (team, roles) => `
+    <div class="org-unit">
+      <div class="org-tname" style="background:${lighten(teamColor(team),0.5)}">${esc(team)}</div>
+      <div class="org-roles">${roles.map(r => {
+        const label = (r.role==="팀장"||r.role==="회계") ? r.role : r.role+" 담당";
+        return `<div class="org-rolebox${r.role==="팀장"?" lead":""}"><b>${esc(label)}</b>${r.name?` ${esc(r.name)}`:""}</div>`;
+      }).join("")}</div>
+    </div>`;
+  $("#orgChart").innerHTML = `
+    <div class="org-top">
+      ${unit(ORG.top.team, ORG.top.roles)}
+      <div class="org-line"></div>
+    </div>
+    <div class="org-conn">
+      <span class="org-conn-h"></span>
+      <span class="org-conn-drop" style="left:25%"></span>
+      <span class="org-conn-drop" style="left:75%"></span>
+    </div>
+    <div class="org-teams2">
+      ${ORG.teams.map(t => unit(t.team, t.roles)).join("")}
+    </div>`;
+}
+renderMemberTabs(); renderRoster(); renderOrg();
+$("#memberTabs").addEventListener("click", e => {
+  const b = e.target.closest(".group-tab"); if(!b) return;
+  memberTab = b.dataset.mtab; renderMemberTabs();
+});
+$("#partTeamTabs").addEventListener("click", e => {
+  const b = e.target.closest(".team-tab"); if(!b) return;
+  activePartTeam = b.dataset.pteam; renderRoster();
+});
+
+/* ── 데이터 저장소 (로컬 / 클라우드 공통 인터페이스) ── */
+function makeLocalStore(){
+  // 직접 입력한 데이터는 이 키에 보존되어 있어요. (앞으로는 키를 올리지 않고 아래 merge로 새 팀을 추가합니다)
+  const KEY = "outreach2026.items.v4";
+  // 새로 생긴 팀(예: 목사님)의 기본 항목만 추가 — 기존 입력은 절대 건드리지 않음
+  function ensureTeams(arr){
+    const present = new Set(arr.map(x=>x.team));
+    let maxId = Math.max(0, ...arr.map(x=>x.id||0));
+    let maxSort = Math.max(0, ...arr.map(x=>x.sort||0));
+    DEFAULT_ITEMS.forEach(d=>{
+      if(!present.has(d.team)) arr.push({id:++maxId, team:d.team, text:d.text, note:d.note||"", done:false, sort:++maxSort});
+    });
+    return arr;
+  }
+  function read(){
+    // 현재 키 → 없으면 이전 버전 키에서 자동 복구
+    let raw = localStorage.getItem(KEY);
+    if(!raw){
+      for(const k of ["outreach2026.items.v3","outreach2026.items.v2","outreach2026.items"]){
+        const old = localStorage.getItem(k);
+        if(old){ raw = old; break; }
+      }
+    }
+    if(raw){ const arr = JSON.parse(raw); const n = arr.length; ensureTeams(arr); if(arr.length!==n) localStorage.setItem(KEY, JSON.stringify(arr)); return arr; }
+    const seed = DEFAULT_ITEMS.map((d,i)=>({id:i+1, team:d.team, text:d.text, note:d.note||"", done:false, sort:i}));
+    localStorage.setItem(KEY, JSON.stringify(seed));
+    return seed;
+  }
+  function write(arr){ localStorage.setItem(KEY, JSON.stringify(arr)); ALL_ITEMS = arr; }
+  return {
+    mode:"local",
+    async load(){ ALL_ITEMS = read(); },
+    async add(team,text,note){ const a=read(); const id=Math.max(0,...a.map(x=>x.id))+1; a.push({id,team,text,note:note||"",done:false,sort:Date.now()}); write(a); },
+    async toggle(id){ const a=read(); const it=a.find(x=>x.id===id); if(it) it.done=!it.done; write(a); },
+    async edit(id,text,note){ const a=read(); const it=a.find(x=>String(x.id)===String(id)); if(it){ it.text=text; it.note=note||""; } write(a); },
+    async remove(id){ write(read().filter(x=>x.id!==id)); },
+    async resetTeam(team){ const a=read(); a.forEach(x=>{ if(x.team===team) x.done=false; }); write(a); },
+    async swap(idA,idB){ const a=read(); const x=a.find(i=>String(i.id)===String(idA)), y=a.find(i=>String(i.id)===String(idB)); if(x&&y){ const t=x.sort; x.sort=y.sort; y.sort=t; } write(a); },
+    async setOrder(team,ids){ const a=read(); ids.forEach((id,idx)=>{ const it=a.find(x=>String(x.id)===String(id)); if(it) it.sort=idx; }); write(a); },
+  };
+}
+function makeCloudStore(){
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const T = "checklist_items";
+  return {
+    mode:"cloud",
+    async load(){
+      let { data, error } = await sb.from(T).select("*").order("sort",{ascending:true});
+      if(error) throw error;
+      if(!data || data.length===0){           // 표가 비어 있으면 첫 1회 자동 채우기
+        await this._seed();
+        ({ data, error } = await sb.from(T).select("*").order("sort",{ascending:true}));
+        if(error) throw error;
+      }
+      ALL_ITEMS = data || [];
+    },
+    async _seed(){
+      // 이 기기에 입력해둔 내용이 있으면 그대로 클라우드로 올리고, 없으면 기본 항목으로 채움
+      let local = [];
+      try{ local = JSON.parse(localStorage.getItem("outreach2026.items.v4")||"[]"); }catch(_){}
+      const src = (local && local.length)
+        ? local.map(x => ({ team:x.team, text:x.text, note:x.note||"", done:!!x.done, sort:x.sort||0 }))
+        : DEFAULT_ITEMS.map((d,i) => ({ team:d.team, text:d.text, note:d.note||"", done:false, sort:i }));
+      if(src.length){ const { error } = await sb.from(T).insert(src); if(error) throw error; }
+    },
+    async add(team,text,note){ const { error } = await sb.from(T).insert({team,text,note:note||"",done:false,sort:Date.now()}); if(error) throw error; await this.load(); },
+    async toggle(id){ const it=ALL_ITEMS.find(x=>x.id===id); const { error } = await sb.from(T).update({done:!it.done}).eq("id",id); if(error) throw error; await this.load(); },
+    async edit(id,text,note){ const { error } = await sb.from(T).update({text,note:note||""}).eq("id",id); if(error) throw error; await this.load(); },
+    async remove(id){ const { error } = await sb.from(T).delete().eq("id",id); if(error) throw error; await this.load(); },
+    async resetTeam(team){ const { error } = await sb.from(T).update({done:false}).eq("team",team); if(error) throw error; await this.load(); },
+    async swap(idA,idB){
+      const x=ALL_ITEMS.find(i=>String(i.id)===String(idA)), y=ALL_ITEMS.find(i=>String(i.id)===String(idB));
+      if(!x||!y) return;
+      const { error:e1 } = await sb.from(T).update({sort:y.sort}).eq("id",idA);
+      const { error:e2 } = await sb.from(T).update({sort:x.sort}).eq("id",idB);
+      if(e1||e2) throw (e1||e2);
+      await this.load();
+    },
+    async setOrder(team,ids){
+      for(let idx=0; idx<ids.length; idx++){
+        const cur = ALL_ITEMS.find(x=>String(x.id)===String(ids[idx]));
+        if(cur && cur.sort!==idx){ const { error } = await sb.from(T).update({sort:idx}).eq("id",ids[idx]); if(error) throw error; }
+      }
+      await this.load();
+    },
+    subscribe(cb){ sb.channel("rt-checklist").on("postgres_changes",{event:"*",schema:"public",table:T},cb).subscribe(); },
+  };
+}
+
+/* ── Checklist 렌더 ── */
+function renderGroupTabs(){
+  $("#groupTabs").innerHTML = GROUPS.map(g =>
+    `<button class="group-tab ${g.id===activeGroup?'active':''}" data-group="${g.id}">${esc(g.name)}</button>`).join("");
+}
+function renderTeamTabs(){
+  $("#teamTabs").innerHTML = TEAMS.filter(t => t.group===activeGroup).map(t => {
+    const active = t.id===activeTeam;
+    const style = active ? `style="background:${t.color};border-color:${t.color}"` : "";
+    const dot = active ? "" : `<span class="tt-dot" style="background:${t.color}"></span>`;
+    return `<button class="team-tab ${active?'active':''}" data-team="${t.id}" ${style}>${dot}${esc(t.name)}</button>`;
+  }).join("");
+}
+function renderChecklist(){
+  const team = TEAMS.find(t => t.id===activeTeam);
+  $("#teamName").textContent = team.name;
+  $("#view-checklist").style.setProperty("--team", team.color);
+  const items = ALL_ITEMS.filter(x => x.team===activeTeam).sort((a,b)=>(a.sort||0)-(b.sort||0));
+  const done = items.filter(x => x.done).length;
+  const total = items.length;
+  $("#progressLabel").textContent = done+" / "+total;
+  $("#progressBar").style.width = (total? Math.round(done/total*100):0)+"%";
+  $("#checklistItems").className = reorderMode ? "reorder" : "";
+  $("#checklistItems").innerHTML = items.length ? items.map((it,i) => {
+    if(String(editingId)===String(it.id)){
+      return `<div class="check-item editing" data-id="${it.id}">
+        <div class="edit-form">
+          <input class="edit-text" type="text" maxlength="80" value="${esc(it.text)}" />
+          <input class="edit-note" type="text" maxlength="80" placeholder="세부 내용 (선택)" value="${esc(it.note||'')}" />
+          <div class="edit-actions">
+            <button class="save" data-act="save">저장</button>
+            <button class="cancel" data-act="cancel">취소</button>
+          </div>
+        </div>
+      </div>`;
+    }
+    const actions = reorderMode
+      ? `<span class="drag-handle" title="드래그하여 이동">⠿</span>`
+      : `<button data-act="edit" title="수정">✏️</button><button data-act="del" title="삭제">✕</button>`;
+    return `<div class="check-item ${it.done?'checked':''}" data-id="${it.id}">
+      <div class="box" data-act="toggle">${checkSVG}</div>
+      <div class="ci-main" data-act="toggle">
+        <div class="ci-text">${esc(it.text)}</div>
+        ${it.note?`<div class="ci-note">${esc(it.note)}</div>`:''}
+      </div>
+      <div class="ci-actions">${actions}</div>
+    </div>`;
+  }).join("") : `<div class="empty">아직 항목이 없어요. 아래에서 추가해보세요.</div>`;
+}
+
+function setBanner(state, msg){
+  const b = $("#banner");
+  if(state==="cloud"){ b.style.display="none"; return; }
+  b.style.display="";
+  if(state==="error"){ b.className="banner"; b.innerHTML = `⚠ 연결 실패 — 키를 확인하세요 (임시로 이 기기에 저장 중)`; }
+  else { b.className="banner"; b.innerHTML = `이 기기에만 저장돼요<span class="lk" id="setupLink">협업 설정 방법 →</span>`;
+    $("#setupLink").onclick = () => alert("협업(실시간 공유)을 켜려면:\n\n1) supabase.com 무료 가입 후 프로젝트 생성\n2) SETUP.md 안의 SQL을 SQL Editor에 붙여넣고 실행\n3) Project Settings → API 에서\n   • Project URL\n   • anon public key\n   두 값을 복사\n4) index.html 상단의\n   SUPABASE_URL / SUPABASE_ANON_KEY 에 붙여넣기\n\n저장 후 새로고침하면 실시간 공유가 켜집니다."); }
+}
+
+/* ── 초기화 ── */
+async function initChecklist(){
+  if(hasCloud && window.supabase){
+    try{
+      store = makeCloudStore();
+      await store.load();
+      setBanner("cloud");
+      store.subscribe(() => { store.load().then(renderChecklist); });
+    }catch(e){
+      console.error(e); setBanner("error");
+      store = makeLocalStore(); await store.load();
+    }
+  }else{
+    store = makeLocalStore(); await store.load(); setBanner("local");
+  }
+  renderGroupTabs(); renderTeamTabs(); renderChecklist();
+}
+
+/* ── 이벤트 ── */
+$("#groupTabs").addEventListener("click", e => {
+  const b = e.target.closest(".group-tab"); if(!b) return;
+  activeGroup = b.dataset.group;
+  activeTeam = TEAMS.find(t => t.group===activeGroup).id;
+  renderGroupTabs(); renderTeamTabs(); renderChecklist();
+});
+$("#teamTabs").addEventListener("click", e => {
+  const b = e.target.closest(".team-tab"); if(!b) return;
+  activeTeam = b.dataset.team; renderTeamTabs(); renderChecklist();
+});
+async function safe(fn){ try{ await fn(); }catch(e){ alert("저장 중 오류가 났어요. 다시 시도해주세요.\n"+(e.message||e)); } renderChecklist(); }
+$("#checklistItems").addEventListener("click", async e => {
+  const btn = e.target.closest("[data-act]"); const row = e.target.closest(".check-item");
+  if(!btn || !row) return;
+  const id = isNaN(+row.dataset.id) ? row.dataset.id : +row.dataset.id;
+  const act = btn.dataset.act;
+  const it = ALL_ITEMS.find(x => String(x.id)===String(row.dataset.id));
+  if(act==="toggle"){ if(reorderMode) return; return safe(()=>store.toggle(id)); }
+  if(act==="edit"){ editingId = row.dataset.id; renderChecklist(); return; }
+  if(act==="save")   return saveEdit(row);
+  if(act==="cancel"){ editingId = null; renderChecklist(); return; }
+  if(act==="del"){ if(confirm("이 항목을 삭제할까요?")) return safe(()=>store.remove(id)); }
+});
+function saveEdit(row){
+  const id = isNaN(+row.dataset.id) ? row.dataset.id : +row.dataset.id;
+  const text = row.querySelector(".edit-text").value.trim(); if(!text) return;
+  const note = row.querySelector(".edit-note").value.trim();
+  editingId = null;
+  safe(()=>store.edit(id, text, note));
+}
+$("#checklistItems").addEventListener("keydown", e => {
+  if(e.key!=="Enter") return;
+  const row = e.target.closest(".check-item.editing"); if(row) saveEdit(row);
+});
+/* ── 드래그앤드롭 순서 변경 (DOM 이동 없이 위치만 계산해 포인터 캡처 유지) ── */
+let drag = null;
+$("#checklistItems").addEventListener("pointerdown", e => {
+  if(!reorderMode) return;
+  const handle = e.target.closest(".drag-handle");
+  const item = e.target.closest(".check-item");
+  if(!handle || !item) return;
+  e.preventDefault();
+  const items = [...$("#checklistItems").querySelectorAll(".check-item")];
+  drag = {
+    el: item, from: items.indexOf(item), startY: e.clientY, items, to: null,
+    mids: items.map(el => { const r = el.getBoundingClientRect(); return r.top + r.height/2; }),
+  };
+  item.classList.add("dragging");
+  try{ item.setPointerCapture(e.pointerId); }catch(_){}
+  item.addEventListener("pointermove", onDragMove);
+  item.addEventListener("pointerup", onDragEnd, {once:true});
+  item.addEventListener("pointercancel", onDragEnd, {once:true});
+});
+function clearDropMarks(){ if(drag) drag.items.forEach(el => el.classList.remove("drop-top","drop-bottom")); }
+function onDragMove(e){
+  if(!drag) return;
+  drag.el.style.transform = `translateY(${e.clientY - drag.startY}px)`;
+  let target = drag.mids.length;
+  for(let i=0;i<drag.mids.length;i++){ if(e.clientY < drag.mids[i]){ target = i; break; } }
+  drag.to = target;
+  clearDropMarks();
+  if(target !== drag.from && target !== drag.from+1){
+    if(target < drag.items.length) drag.items[target].classList.add("drop-top");
+    else drag.items[drag.items.length-1].classList.add("drop-bottom");
+  }
+}
+function onDragEnd(){
+  if(!drag) return;
+  const { el, from, to, items } = drag;
+  el.removeEventListener("pointermove", onDragMove);
+  clearDropMarks();
+  el.classList.remove("dragging");
+  el.style.transform = "";
+  drag = null;
+  if(to==null || to===from || to===from+1) return; // 위치 변화 없음
+  const ids = items.map(x => x.dataset.id);
+  const [moved] = ids.splice(from, 1);
+  ids.splice(from < to ? to-1 : to, 0, moved);
+  safe(()=>store.setOrder(activeTeam, ids));
+}
+$("#reorderBtn").addEventListener("click", () => {
+  reorderMode = !reorderMode;
+  $("#reorderBtn").textContent = reorderMode ? "✓ 완료" : "↕ 순서 변경";
+  $("#reorderBtn").classList.toggle("on", reorderMode);
+  renderChecklist();
+});
+function addItem(){
+  const inp = $("#newItem"), note = $("#newNote");
+  const v = inp.value.trim(); if(!v) return;
+  const n = note.value.trim();
+  inp.value=""; note.value="";
+  safe(()=>store.add(activeTeam, v, n));
+}
+$("#addBtn").addEventListener("click", addItem);
+$("#newItem").addEventListener("keydown", e => { if(e.key==="Enter") addItem(); });
+$("#newNote").addEventListener("keydown", e => { if(e.key==="Enter") addItem(); });
+$("#resetTeam").addEventListener("click", () => {
+  if(confirm("이 팀의 체크를 모두 해제할까요?")) safe(()=>store.resetTeam(activeTeam));
+});
+
+/* ── 하단 네비 ── */
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+    tab.classList.add("active");
+    $("#view-"+tab.dataset.view).classList.add("active");
+    window.scrollTo({top:0,behavior:"smooth"});
+  });
+});
+
+/* ── 숙소 모달 ── */
+const lodgeModal = $("#lodgeModal");
+$("#lodgeBtn").addEventListener("click", () => { lodgeModal.hidden = false; });
+$("#lodgeClose").addEventListener("click", () => { lodgeModal.hidden = true; });
+lodgeModal.addEventListener("click", e => { if(e.target===lodgeModal) lodgeModal.hidden = true; });
+
+/* ── 회비 모달 ── */
+const feeModal = $("#feeModal");
+function renderFee(){
+  $("#feeNote").textContent = FEE.note || "";
+  $("#feeNote").style.display = FEE.note ? "" : "none";
+  $("#feeRows").innerHTML = (FEE.rows||[]).map(r =>
+    `<div class="fee-row"><b>${esc(r.label)}</b><span>${esc(r.amount)}</span></div>`).join("");
+  const acc = $("#feeAccount");
+  if(FEE.account){ acc.innerHTML = `<small>입금 계좌</small>${esc(FEE.account)}`; acc.style.display = ""; }
+  else acc.style.display = "none";
+}
+renderFee();
+$("#feeBtn").addEventListener("click", () => { feeModal.hidden = false; });
+$("#feeClose").addEventListener("click", () => { feeModal.hidden = true; });
+feeModal.addEventListener("click", e => { if(e.target===feeModal) feeModal.hidden = true; });
+
+initChecklist();
+</script>
+</body>
+</html>
