@@ -7,8 +7,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 <title>2026 흰돌청년부 하계 아웃리치</title>
-<!-- deploy: public repo, redeploy -->
-
 <style>
   :root{
     --bg:#ffffff; --bg-soft:#f4f4f5; --card:#ffffff;
@@ -264,12 +262,13 @@
     </button>
     <p class="eyebrow">2026 흰돌청년부 하계 아웃리치</p>
     <h1>Dreamer</h1>
-    <p class="verse">꿈꾸는 자가 온다</p>
+    <p class="verse">드리머 · 꿈꾸는 자가 온다<span>창 37:19 “서로 이르되 꿈 꾸는 자가 오는도다”</span></p>
     <div class="meta">
       <span class="chip">📅 <b>7/29 – 8/1</b></span>
-      <span class="chip">📍 <b>경북 문경</b></span>
+      <button class="chip chip-btn" id="locBtn">📍 <b>문경</b> <span class="chip-arrow">ⓘ</span></button>
       <button class="chip chip-btn" id="lodgeBtn">🏠 <b>농선재 3박</b> <span class="chip-arrow">ⓘ</span></button>
       <button class="chip chip-btn" id="feeBtn">💳 <b>회비</b> <span class="chip-arrow">ⓘ</span></button>
+      <button class="chip chip-btn" id="lecturerBtn">🎤 <b>강사</b> <span class="chip-arrow">ⓘ</span></button>
     </div>
   </header>
 
@@ -357,6 +356,32 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>멤버
     </button>
   </nav>
+
+  <!-- 위치 (가은제일교회) -->
+  <div class="modal" id="locModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>📍 사역지 · 가은제일교회</span>
+        <button class="modal-x" id="locClose">✕</button>
+      </div>
+      <p class="m-sub">경북 문경 · 아웃리치 본부 교회</p>
+      <div class="m-row"><b>교회</b><span>가은제일교회</span></div>
+      <div class="m-row"><b>주소</b><span>경북 문경시 가은읍 대야로 2479</span></div>
+      <a class="m-account" id="locMap" href="https://map.kakao.com/?q=경북 문경시 가은읍 대야로 2479 가은제일교회" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;">🗺️ 카카오맵에서 길찾기</a>
+    </div>
+  </div>
+
+  <!-- 강사 안내 -->
+  <div class="modal" id="lecturerModal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <span>🎤 강사 안내</span>
+        <button class="modal-x" id="lecturerClose">✕</button>
+      </div>
+      <div class="m-row"><b>강사</b><span>함영주 교수</span></div>
+      <div class="m-row"><b>소속</b><span>총신대 기독교교육학과</span></div>
+    </div>
+  </div>
 
   <!-- 숙소 상세 (농선재) -->
   <div class="modal" id="lodgeModal" hidden>
@@ -1199,6 +1224,18 @@ document.querySelectorAll(".tab").forEach(tab => {
     window.scrollTo({top:0,behavior:"smooth"});
   });
 });
+
+/* ── 위치 모달 ── */
+const locModal = $("#locModal");
+$("#locBtn").addEventListener("click", () => { locModal.hidden = false; });
+$("#locClose").addEventListener("click", () => { locModal.hidden = true; });
+locModal.addEventListener("click", e => { if(e.target===locModal) locModal.hidden = true; });
+
+/* ── 강사 모달 ── */
+const lecturerModal = $("#lecturerModal");
+$("#lecturerBtn").addEventListener("click", () => { lecturerModal.hidden = false; });
+$("#lecturerClose").addEventListener("click", () => { lecturerModal.hidden = true; });
+lecturerModal.addEventListener("click", e => { if(e.target===lecturerModal) lecturerModal.hidden = true; });
 
 /* ── 숙소 모달 ── */
 const lodgeModal = $("#lodgeModal");
