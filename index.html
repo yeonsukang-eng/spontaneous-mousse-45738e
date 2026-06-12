@@ -790,6 +790,30 @@ function renderTTGrid(){
       arr[i] = { r, span };
       for(let k=i+1; k<i+span && k<times.length; k++) arr[k] = "cov";
     });
+    // 빈 칸(empty) 없애기 — 인접 일정 셀을 위/아래로 늘려 병합
+    const reals = [];
+    for(let i=0;i<arr.length;i++){ if(arr[i]!=="empty" && arr[i]!=="cov") reals.push(i); }
+    if(reals.length){
+      // 맨 위 빈칸 → 첫 일정 셀을 위로 연장
+      const f = reals[0];
+      if(f>0){
+        const cell = arr[f];
+        arr[0] = { r: cell.r, span: cell.span + f };
+        for(let k=1;k<f+cell.span;k++) arr[k] = "cov";
+        reals[0] = 0;
+      }
+      // 각 일정 셀을 아래 빈칸만큼 연장 (다음 일정 직전까지 / 마지막은 표 끝까지)
+      for(let j=0;j<reals.length;j++){
+        const start = reals[j];
+        const cell = arr[start];
+        const nextStart = (j+1<reals.length) ? reals[j+1] : arr.length;
+        const newSpan = nextStart - start;
+        if(newSpan > cell.span){
+          cell.span = newSpan;
+          for(let k=start+1;k<start+newSpan && k<arr.length;k++) arr[k] = "cov";
+        }
+      }
+    }
     return arr;
   });
   const header = `<tr><th>시간</th>${TIMETABLE.map(d =>
