@@ -229,6 +229,11 @@
   .ptable td.on{color:var(--ink);font-weight:800;font-size:13px;}
   .ptable td.off{color:var(--muted-2);}
   .ptable tr.grp td{background:var(--bg-soft);text-align:left;font-size:10.5px;font-weight:800;color:var(--muted);padding:6px 8px;border-bottom:0;}
+  .ptable th.noteh{border-left:1px solid var(--line);font-size:10px;font-weight:700;color:var(--muted);}
+  .ptable td.note{border-left:1px solid var(--line);text-align:left;white-space:normal;font-size:10.5px;color:var(--muted);min-width:96px;line-height:1.35;}
+  .tbd-box{margin-top:10px;padding:11px 13px;background:var(--bg-soft);border-radius:10px;}
+  .tbd-box b{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;}
+  .tbd-names{font-size:12.5px;color:var(--text);line-height:1.7;font-weight:600;}
   /* 멤버 — 조직도 */
   .org-top{display:flex;flex-direction:column;align-items:center;}
   .org-unit{display:flex;flex-direction:column;text-align:center;}
@@ -328,7 +333,6 @@
       <div class="group-tabs" id="memberTabs"></div>
 
       <div id="rosterPanel">
-        <div class="team-tabs" id="partTeamTabs"></div>
         <div class="card" id="rosterTable"></div>
         <p class="hint" id="rosterCount"></p>
       </div>
@@ -467,6 +471,7 @@ const FEE = {
 
 // 업데이트 알림 (수정할 때마다 맨 위에 한 줄씩 추가하면 됩니다)
 const UPDATES = [
+  { id:"u-0621",  date:"6/21", text:"참가 조사 결과로 멤버 명단을 업데이트했어요 (전참 14·부분참 15·미정 10 / 식사·이동 정보 포함)" },
   { id:"u-0604b", date:"6/4", text:"타임테이블을 전체표(셀 병합)로 정리했어요" },
   { id:"u-0604a", date:"6/4", text:"멤버 페이지(참가자 목록·조직도)를 추가했어요" },
   { id:"u-0603",  date:"6/3", text:"체크리스트 협업·순서 변경(드래그) 기능을 추가했어요" },
@@ -672,25 +677,58 @@ const TIMETABLE = [
   ]},
 ];
 
-// 참가자 목록 — 두 팀으로만 구분
-const PART_TEAMS = ["성경학교팀", "청소년부 수련회팀"];
+// 참가자 목록 — 팀 구분 없이 전체 인원 (전참/부분참/미정으로 분류)
 // 식사 단위(아침/점심/저녁) 칸 — 도착/귀가 일정에 맞춰 첫날 아침·마지막날 저녁은 제외
 const PART_SCHEDULE = [
   { day:"7/29", meals:[ {id:"29L",label:"점심"}, {id:"29D",label:"저녁"} ] },
   { day:"7/30", meals:[ {id:"30B",label:"아침"}, {id:"30L",label:"점심"}, {id:"30D",label:"저녁"} ] },
   { day:"7/31", meals:[ {id:"31B",label:"아침"}, {id:"31L",label:"점심"}, {id:"31D",label:"저녁"} ] },
-  { day:"8/1",  meals:[ {id:"1B",label:"아침"}, {id:"1L",label:"점심"} ] },
+  { day:"8/1",  meals:[ {id:"1L",label:"점심"} ] },
 ];
 const PART_SLOTS = [];
 PART_SCHEDULE.forEach(d => d.meals.forEach((m,i) => PART_SLOTS.push({ id:m.id, label:m.label, day:d.day, first:i===0 })));
 const ALL_SLOTS = PART_SLOTS.map(s => s.id);
-// attend: 참석하는 식사 id 배열 (전부면 전참 / 일부면 부분참 자동 분류)
+// status: full(전참) / part(부분참) / tbd(미정), attend: 참석 식사 id, note: 이동·비고
 const MEMBERS = [
-  { name:"강은수",  team:"성경학교팀",       attend: ALL_SLOTS },
-  { name:"참가자 A", team:"성경학교팀",       attend: ALL_SLOTS },
-  { name:"참가자 B", team:"성경학교팀",       attend:["29D","30B","30L","30D"] }, // 7/29 저녁~7/30 저녁
-  { name:"김세현",  team:"청소년부 수련회팀", attend: ALL_SLOTS },
-  { name:"참가자 C", team:"청소년부 수련회팀", attend:["30B","30L","30D","31B","31L","31D"] },
+  { name:"유제성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"교회차 / 중간에 취업되면 변동있음" },
+  { name:"김지수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"강은수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"황현성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"공익근무 출근 후 확인필요" },
+  { name:"김수진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"조성진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"김세현", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"문승준", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"김희규", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"박찬영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"강연수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"오주영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"박하진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"최강",   status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"다시확인필요" },
+  { name:"김혜경", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
+  { name:"박동원", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
+  { name:"최설화", status:"part", attend:["30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
+  { name:"강지수", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"황민영", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"성재범", status:"part", attend:["30D","31B","31L","31D","1L"], note:"자차" },
+  { name:"조예진", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"최예지", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"김주성", status:"part", attend:["30D","31B","31L","31D","1L"], note:"자차" },
+  { name:"임성일", status:"part", attend:["29L","29D","30B","30L","30D"], note:"" },
+  { name:"이학건", status:"part", attend:["31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"김경중", status:"part", attend:["31B","31L","31D","1L"], note:"대중교통" },
+  { name:"김병권", status:"part", attend:[], note:"식사 미정" },
+  { name:"김효진", status:"part", attend:[], note:"식사 미정" },
+  { name:"최은지", status:"part", attend:["30L","30D","31B","31L","31D","1L"], note:"대중교통/카풀필요" },
+  { name:"박은혜", status:"tbd", attend:[], note:"" },
+  { name:"오민재", status:"tbd", attend:[], note:"" },
+  { name:"고은",   status:"tbd", attend:[], note:"" },
+  { name:"정다은", status:"tbd", attend:[], note:"" },
+  { name:"김지유", status:"tbd", attend:[], note:"" },
+  { name:"박승현", status:"tbd", attend:[], note:"" },
+  { name:"김재은", status:"tbd", attend:[], note:"" },
+  { name:"양선원", status:"tbd", attend:[], note:"" },
+  { name:"전인수", status:"tbd", attend:[], note:"" },
+  { name:"임대일", status:"tbd", attend:[], note:"" },
 ];
 
 // 조직도 (아웃리치 기간 편성)
@@ -895,7 +933,6 @@ updateBadge();
 
 /* ── Member (참가자 목록 / 조직도) ── */
 let memberTab = "roster";
-let activePartTeam = PART_TEAMS[0];
 const teamColor = name => (TEAMS.find(t=>t.name===name)||{}).color || "#e5e7eb";
 // hex를 흰색 쪽으로 섞어 더 연하게 (amt: 0~1)
 function lighten(hex, amt){
@@ -911,31 +948,27 @@ function renderMemberTabs(){
   $("#rosterPanel").hidden = memberTab!=="roster";
   $("#orgPanel").hidden = memberTab!=="org";
 }
-const isFull = m => ALL_SLOTS.every(id => (m.attend||[]).includes(id));
 function rosterRows(members){
   return members.map(m => {
     const set = new Set(m.attend||[]);
     return `<tr><td class="nm">${esc(m.name)}</td>${PART_SLOTS.map(s =>
-      `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}</tr>`;
+      `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}<td class="note">${esc(m.note||"")}</td></tr>`;
   }).join("");
 }
 function renderRoster(){
-  $("#partTeamTabs").innerHTML = PART_TEAMS.map(t =>
-    `<button class="team-tab ${t===activePartTeam?'active':''}" data-pteam="${t}">${esc(t)}</button>`).join("");
-  const all = MEMBERS.filter(m => m.team===activePartTeam);
-  const full = all.filter(isFull);
-  const part = all.filter(m => !isFull(m));
-  const span = PART_SLOTS.length + 1;
+  const full = MEMBERS.filter(m => m.status==="full");
+  const part = MEMBERS.filter(m => m.status==="part");
+  const tbd  = MEMBERS.filter(m => m.status==="tbd");
+  const span = PART_SLOTS.length + 2;
   const dayHdr = PART_SCHEDULE.map(d => `<th colspan="${d.meals.length}" class="dayhdr daystart">${esc(d.day)}</th>`).join("");
   const mealHdr = PART_SLOTS.map(s => `<th class="mealhdr ${s.first?'daystart':''}">${esc(s.label)}</th>`).join("");
-  const head = `<thead><tr><th class="nmh" rowspan="2">이름</th>${dayHdr}</tr><tr>${mealHdr}</tr></thead>`;
+  const head = `<thead><tr><th class="nmh" rowspan="2">이름</th>${dayHdr}<th class="noteh" rowspan="2">비고</th></tr><tr>${mealHdr}</tr></thead>`;
   let body = "";
   if(full.length) body += `<tr class="grp"><td colspan="${span}">전참 · ${full.length}명</td></tr>${rosterRows(full)}`;
   if(part.length) body += `<tr class="grp"><td colspan="${span}">부분참 · ${part.length}명</td></tr>${rosterRows(part)}`;
-  $("#rosterTable").innerHTML = all.length
-    ? `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
-    : `<div class="empty">명단이 비어 있어요.</div>`;
-  $("#rosterCount").textContent = `${activePartTeam} ${all.length}명 · 전참 ${full.length} / 부분참 ${part.length}`;
+  $("#rosterTable").innerHTML = `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
+    + (tbd.length ? `<div class="tbd-box"><b>미정 · ${tbd.length}명</b><div class="tbd-names">${tbd.map(m=>esc(m.name)).join("  ·  ")}</div></div>` : "");
+  $("#rosterCount").textContent = `전체 ${MEMBERS.length}명 · 전참 ${full.length} / 부분참 ${part.length} / 미정 ${tbd.length}`;
 }
 function renderOrg(){
   $("#orgNote").textContent = ORG.note || "";
@@ -965,10 +998,6 @@ renderMemberTabs(); renderRoster(); renderOrg();
 $("#memberTabs").addEventListener("click", e => {
   const b = e.target.closest(".group-tab"); if(!b) return;
   memberTab = b.dataset.mtab; renderMemberTabs();
-});
-$("#partTeamTabs").addEventListener("click", e => {
-  const b = e.target.closest(".team-tab"); if(!b) return;
-  activePartTeam = b.dataset.pteam; renderRoster();
 });
 
 /* ── 데이터 저장소 (로컬 / 클라우드 공통 인터페이스) ── */
