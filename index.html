@@ -234,10 +234,11 @@
   .tbd-box{margin-top:10px;padding:11px 13px;background:var(--bg-soft);border-radius:10px;}
   .tbd-box b{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;}
   .tbd-names{font-size:12.5px;color:var(--text);line-height:1.7;font-weight:600;}
-  .pteam{display:inline-block;font-size:9px;font-weight:700;color:#27313f;border-radius:5px;padding:1px 5px;line-height:1.5;vertical-align:middle;white-space:nowrap;}
-  .pteam.hold{opacity:.55;border:1px dashed var(--muted-2);padding:0 4px;}
-  .team-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:9px;}
-  .team-legend .lg-hold{font-weight:500;color:var(--muted-2);}
+  .ptable td.nm .nm-st{display:inline-block;font-size:9px;font-weight:700;border-radius:4px;padding:0 4px;line-height:1.5;vertical-align:middle;}
+  .nm-st.nm-full{background:#dceee0;color:#2c6a47;}
+  .nm-st.nm-part{background:#f1e6cf;color:#8a6a1f;}
+  .nm-st.nm-tbd{background:#e8e8ec;color:#6b7280;}
+  .ptable td.nm .nm-hold{display:inline-block;font-size:9px;font-weight:700;color:var(--muted-2);border:1px dashed var(--muted-2);border-radius:4px;padding:0 4px;margin-left:3px;vertical-align:middle;}
   /* 멤버 — 조직도 */
   .org-top{display:flex;flex-direction:column;align-items:center;}
   .org-unit{display:flex;flex-direction:column;text-align:center;}
@@ -671,10 +672,10 @@ PART_SCHEDULE.forEach(d => d.meals.forEach((m,i) => PART_SLOTS.push({ id:m.id, l
 const ALL_SLOTS = PART_SLOTS.map(s => s.id);
 // status: full(전참) / part(부분참) / tbd(미정), attend: 참석 식사 id, note: 이동·비고
 const MEMBERS = [
-  { name:"유제성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"교회차 / 중간에 취업되면 변동있음", team:"bible", hold:"보류" },
+  { name:"유제성", status:"tbd", attend:[], note:"교회차 / 중간에 취업되면 변동있음", team:"bible", hold:"보류" },
   { name:"김지수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"강은수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
-  { name:"황현성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"공익근무 출근 후 확인필요" },
+  { name:"황현성", status:"tbd", attend:[], note:"공익근무 출근 후 확인필요" },
   { name:"김수진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"조성진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"김세현", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
@@ -929,34 +930,42 @@ function renderMemberTabs(){
   $("#rosterPanel").hidden = memberTab!=="roster";
   $("#orgPanel").hidden = memberTab!=="org";
 }
-const TEAM_LABEL = { bible:"성경학교", camp:"수련회" };
 const TEAM_COLOR = { bible:"#cdddf7", camp:"#cce9da" };
-function teamTag(m){
-  if(!m || !m.team) return "";
-  return `<span class="pteam${m.hold?' hold':''}" style="background:${TEAM_COLOR[m.team]}">${TEAM_LABEL[m.team]}${m.hold?'·'+esc(m.hold):''}</span>`;
-}
+const TEAM_GROUPS = [
+  { team:"bible", name:"성경학교팀" },
+  { team:"camp",  name:"수련회팀" },
+  { team:null,    name:"미배정" },
+];
+const STATUS_ORDER = { full:0, part:1, tbd:2 };
+const STATUS_LABEL = { full:"전참", part:"부분참", tbd:"미정" };
 function rosterRows(members){
   return members.map(m => {
     const set = new Set(m.attend||[]);
-    return `<tr><td class="nm">${esc(m.name)}${m.team?'<br>'+teamTag(m):''}</td>${PART_SLOTS.map(s =>
+    const tags = `<span class="nm-st nm-${m.status}">${STATUS_LABEL[m.status]}</span>${m.hold?`<span class="nm-hold">${esc(m.hold)}</span>`:""}`;
+    return `<tr><td class="nm">${esc(m.name)}<br>${tags}</td>${PART_SLOTS.map(s =>
       `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}<td class="note">${esc(m.note||"")}</td></tr>`;
   }).join("");
 }
 function renderRoster(){
-  const full = MEMBERS.filter(m => m.status==="full");
-  const part = MEMBERS.filter(m => m.status==="part");
-  const tbd  = MEMBERS.filter(m => m.status==="tbd");
   const span = PART_SLOTS.length + 2;
   const dayHdr = PART_SCHEDULE.map(d => `<th colspan="${d.meals.length}" class="dayhdr daystart">${esc(d.day)}</th>`).join("");
   const mealHdr = PART_SLOTS.map(s => `<th class="mealhdr ${s.first?'daystart':''}">${esc(s.label)}</th>`).join("");
   const head = `<thead><tr><th class="nmh" rowspan="2">이름</th>${dayHdr}<th class="noteh" rowspan="2">비고</th></tr><tr>${mealHdr}</tr></thead>`;
+  // 팀 배정이 없고 참가도 미정인 인원은 아래 박스로 따로 모음
+  const boxTbd = MEMBERS.filter(m => !m.team && m.status==="tbd");
   let body = "";
-  if(full.length) body += `<tr class="grp"><td colspan="${span}">전참 · ${full.length}명</td></tr>${rosterRows(full)}`;
-  if(part.length) body += `<tr class="grp"><td colspan="${span}">부분참 · ${part.length}명</td></tr>${rosterRows(part)}`;
-  const legend = `<div class="team-legend">팀 배치 <span class="pteam" style="background:${TEAM_COLOR.bible}">성경학교</span><span class="pteam" style="background:${TEAM_COLOR.camp}">수련회</span><span class="lg-hold">·보류/미정 = 잠정 배치</span></div>`;
-  $("#rosterTable").innerHTML = legend + `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
-    + (tbd.length ? `<div class="tbd-box"><b>미정 · ${tbd.length}명</b><div class="tbd-names">${tbd.map(m=>esc(m.name)+(m.team?' '+teamTag(m):'')).join("  ·  ")}</div></div>` : "");
-  $("#rosterCount").textContent = `전체 ${MEMBERS.length}명 · 전참 ${full.length} / 부분참 ${part.length} / 미정 ${tbd.length}`;
+  TEAM_GROUPS.forEach(g => {
+    let list = MEMBERS.filter(m => (m.team||null)===g.team);
+    if(g.team===null) list = list.filter(m => m.status!=="tbd");
+    if(!list.length) return;
+    list = list.slice().sort((a,b)=>STATUS_ORDER[a.status]-STATUS_ORDER[b.status]);
+    const tint = g.team ? lighten(TEAM_COLOR[g.team],0.4) : "";
+    body += `<tr class="grp"><td colspan="${span}"${tint?` style="background:${tint}"`:""}>${esc(g.name)} · ${list.length}명</td></tr>${rosterRows(list)}`;
+  });
+  $("#rosterTable").innerHTML = `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
+    + (boxTbd.length ? `<div class="tbd-box"><b>미배정 · 미정 ${boxTbd.length}명</b><div class="tbd-names">${boxTbd.map(m=>esc(m.name)).join("  ·  ")}</div></div>` : "");
+  const c = t => MEMBERS.filter(m => (m.team||null)===t).length;
+  $("#rosterCount").textContent = `전체 ${MEMBERS.length}명 · 성경학교 ${c("bible")} / 수련회 ${c("camp")} / 미배정 ${c(null)}`;
 }
 function renderOrg(){
   $("#orgNote").textContent = ORG.note || "";
