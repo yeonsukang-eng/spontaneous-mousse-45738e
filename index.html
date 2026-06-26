@@ -683,7 +683,7 @@ const MEMBERS = [
   { name:"김희규", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"박찬영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"강연수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
-  { name:"오주영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp", hold:"미정" },
+  { name:"오주영", status:"tbd", attend:[], note:"", team:"camp", hold:"미정" },
   { name:"박하진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
   { name:"최강",   status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"다시확인필요" },
   { name:"김혜경", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통", team:"bible" },
@@ -698,7 +698,7 @@ const MEMBERS = [
   { name:"임성일", status:"part", attend:["29L","29D","30B","30L","30D"], note:"" },
   { name:"이학건", status:"part", attend:["31B","31L","31D","1L"], note:"카풀필요", team:"camp" },
   { name:"김경중", status:"part", attend:["31B","31L","31D","1L"], note:"대중교통" },
-  { name:"김병권", status:"part", attend:[], note:"식사 미정", team:"camp" },
+  { name:"김병권", status:"part", attend:["31B","31L","31D","1L"], note:"금토", team:"camp" },
   { name:"김효진", status:"part", attend:[], note:"식사 미정" },
   { name:"최은지", status:"part", attend:["30L","30D","31B","31L","31D","1L"], note:"대중교통/카풀필요", team:"bible" },
   { name:"박은혜", status:"tbd", attend:[], note:"" },
@@ -936,7 +936,6 @@ const TEAM_GROUPS = [
   { team:"camp",  name:"수련회팀" },
   { team:null,    name:"미배정" },
 ];
-const STATUS_ORDER = { full:0, part:1, tbd:2 };
 const STATUS_LABEL = { full:"전참", part:"부분참", tbd:"미정" };
 function rosterRows(members){
   return members.map(m => {
@@ -952,13 +951,13 @@ function renderRoster(){
   const mealHdr = PART_SLOTS.map(s => `<th class="mealhdr ${s.first?'daystart':''}">${esc(s.label)}</th>`).join("");
   const head = `<thead><tr><th class="nmh" rowspan="2">이름</th>${dayHdr}<th class="noteh" rowspan="2">비고</th></tr><tr>${mealHdr}</tr></thead>`;
   // 팀 배정이 없고 참가도 미정인 인원은 아래 박스로 따로 모음
-  const boxTbd = MEMBERS.filter(m => !m.team && m.status==="tbd");
+  const boxTbd = MEMBERS.filter(m => !m.team && m.status==="tbd").sort((a,b)=>a.name.localeCompare(b.name,"ko"));
   let body = "";
   TEAM_GROUPS.forEach(g => {
     let list = MEMBERS.filter(m => (m.team||null)===g.team);
     if(g.team===null) list = list.filter(m => m.status!=="tbd");
     if(!list.length) return;
-    list = list.slice().sort((a,b)=>STATUS_ORDER[a.status]-STATUS_ORDER[b.status]);
+    list = list.slice().sort((a,b)=> (b.attend||[]).length-(a.attend||[]).length || a.name.localeCompare(b.name,"ko"));
     const tint = g.team ? lighten(TEAM_COLOR[g.team],0.4) : "";
     body += `<tr class="grp"><td colspan="${span}"${tint?` style="background:${tint}"`:""}>${esc(g.name)} · ${list.length}명</td></tr>${rosterRows(list)}`;
   });
