@@ -234,6 +234,10 @@
   .tbd-box{margin-top:10px;padding:11px 13px;background:var(--bg-soft);border-radius:10px;}
   .tbd-box b{display:block;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:6px;}
   .tbd-names{font-size:12.5px;color:var(--text);line-height:1.7;font-weight:600;}
+  .pteam{display:inline-block;font-size:9px;font-weight:700;color:#27313f;border-radius:5px;padding:1px 5px;line-height:1.5;vertical-align:middle;white-space:nowrap;}
+  .pteam.hold{opacity:.55;border:1px dashed var(--muted-2);padding:0 4px;}
+  .team-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:9px;}
+  .team-legend .lg-hold{font-weight:500;color:var(--muted-2);}
   /* 멤버 — 조직도 */
   .org-top{display:flex;flex-direction:column;align-items:center;}
   .org-unit{display:flex;flex-direction:column;text-align:center;}
@@ -667,41 +671,41 @@ PART_SCHEDULE.forEach(d => d.meals.forEach((m,i) => PART_SLOTS.push({ id:m.id, l
 const ALL_SLOTS = PART_SLOTS.map(s => s.id);
 // status: full(전참) / part(부분참) / tbd(미정), attend: 참석 식사 id, note: 이동·비고
 const MEMBERS = [
-  { name:"유제성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"교회차 / 중간에 취업되면 변동있음" },
-  { name:"김지수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"강은수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"유제성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"교회차 / 중간에 취업되면 변동있음", team:"bible", hold:"보류" },
+  { name:"김지수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"강은수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
   { name:"황현성", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"공익근무 출근 후 확인필요" },
-  { name:"김수진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"조성진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"김세현", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"문승준", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"김희규", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"박찬영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"강연수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"오주영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
-  { name:"박하진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"" },
+  { name:"김수진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"조성진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"김세현", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"문승준", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
+  { name:"김희규", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"박찬영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
+  { name:"강연수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
+  { name:"오주영", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp", hold:"미정" },
+  { name:"박하진", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
   { name:"최강",   status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"다시확인필요" },
-  { name:"김혜경", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
-  { name:"박동원", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
+  { name:"김혜경", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통", team:"bible" },
+  { name:"박동원", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통", team:"camp" },
   { name:"최설화", status:"part", attend:["30B","30L","30D","31B","31L","31D","1L"], note:"대중교통" },
   { name:"강지수", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
-  { name:"황민영", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"황민영", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요", team:"camp" },
   { name:"성재범", status:"part", attend:["30D","31B","31L","31D","1L"], note:"자차" },
-  { name:"조예진", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"조예진", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요", team:"bible", hold:"보류" },
   { name:"최예지", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요" },
   { name:"김주성", status:"part", attend:["30D","31B","31L","31D","1L"], note:"자차" },
   { name:"임성일", status:"part", attend:["29L","29D","30B","30L","30D"], note:"" },
-  { name:"이학건", status:"part", attend:["31B","31L","31D","1L"], note:"카풀필요" },
+  { name:"이학건", status:"part", attend:["31B","31L","31D","1L"], note:"카풀필요", team:"camp" },
   { name:"김경중", status:"part", attend:["31B","31L","31D","1L"], note:"대중교통" },
-  { name:"김병권", status:"part", attend:[], note:"식사 미정" },
+  { name:"김병권", status:"part", attend:[], note:"식사 미정", team:"camp" },
   { name:"김효진", status:"part", attend:[], note:"식사 미정" },
-  { name:"최은지", status:"part", attend:["30L","30D","31B","31L","31D","1L"], note:"대중교통/카풀필요" },
+  { name:"최은지", status:"part", attend:["30L","30D","31B","31L","31D","1L"], note:"대중교통/카풀필요", team:"bible" },
   { name:"박은혜", status:"tbd", attend:[], note:"" },
   { name:"오민재", status:"tbd", attend:[], note:"" },
   { name:"고은",   status:"tbd", attend:[], note:"" },
   { name:"정다은", status:"tbd", attend:[], note:"" },
   { name:"김지유", status:"tbd", attend:[], note:"" },
-  { name:"박승현", status:"tbd", attend:[], note:"" },
+  { name:"박승현", status:"tbd", attend:[], note:"", team:"bible", hold:"보류" },
   { name:"김재은", status:"tbd", attend:[], note:"" },
   { name:"양선원", status:"tbd", attend:[], note:"" },
   { name:"전인수", status:"tbd", attend:[], note:"" },
@@ -925,10 +929,16 @@ function renderMemberTabs(){
   $("#rosterPanel").hidden = memberTab!=="roster";
   $("#orgPanel").hidden = memberTab!=="org";
 }
+const TEAM_LABEL = { bible:"성경학교", camp:"수련회" };
+const TEAM_COLOR = { bible:"#cdddf7", camp:"#cce9da" };
+function teamTag(m){
+  if(!m || !m.team) return "";
+  return `<span class="pteam${m.hold?' hold':''}" style="background:${TEAM_COLOR[m.team]}">${TEAM_LABEL[m.team]}${m.hold?'·'+esc(m.hold):''}</span>`;
+}
 function rosterRows(members){
   return members.map(m => {
     const set = new Set(m.attend||[]);
-    return `<tr><td class="nm">${esc(m.name)}</td>${PART_SLOTS.map(s =>
+    return `<tr><td class="nm">${esc(m.name)}${m.team?'<br>'+teamTag(m):''}</td>${PART_SLOTS.map(s =>
       `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}<td class="note">${esc(m.note||"")}</td></tr>`;
   }).join("");
 }
@@ -943,8 +953,9 @@ function renderRoster(){
   let body = "";
   if(full.length) body += `<tr class="grp"><td colspan="${span}">전참 · ${full.length}명</td></tr>${rosterRows(full)}`;
   if(part.length) body += `<tr class="grp"><td colspan="${span}">부분참 · ${part.length}명</td></tr>${rosterRows(part)}`;
-  $("#rosterTable").innerHTML = `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
-    + (tbd.length ? `<div class="tbd-box"><b>미정 · ${tbd.length}명</b><div class="tbd-names">${tbd.map(m=>esc(m.name)).join("  ·  ")}</div></div>` : "");
+  const legend = `<div class="team-legend">팀 배치 <span class="pteam" style="background:${TEAM_COLOR.bible}">성경학교</span><span class="pteam" style="background:${TEAM_COLOR.camp}">수련회</span><span class="lg-hold">·보류/미정 = 잠정 배치</span></div>`;
+  $("#rosterTable").innerHTML = legend + `<div class="ptable-wrap"><table class="ptable">${head}<tbody>${body}</tbody></table></div>`
+    + (tbd.length ? `<div class="tbd-box"><b>미정 · ${tbd.length}명</b><div class="tbd-names">${tbd.map(m=>esc(m.name)+(m.team?' '+teamTag(m):'')).join("  ·  ")}</div></div>` : "");
   $("#rosterCount").textContent = `전체 ${MEMBERS.length}명 · 전참 ${full.length} / 부분참 ${part.length} / 미정 ${tbd.length}`;
 }
 function renderOrg(){
