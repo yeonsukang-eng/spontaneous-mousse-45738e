@@ -239,6 +239,8 @@
   .nm-st.nm-part{background:#f1e6cf;color:#8a6a1f;}
   .nm-st.nm-tbd{background:#e8e8ec;color:#6b7280;}
   .ptable td.nm .nm-hold{display:inline-block;font-size:9px;font-weight:700;color:var(--muted-2);border:1px dashed var(--muted-2);border-radius:4px;padding:0 4px;margin-left:3px;vertical-align:middle;}
+  .ptable td.tbd-cell{text-align:center;font-size:10.5px;font-weight:600;color:var(--muted-2);background:var(--bg-soft);white-space:nowrap;}
+  .ptable td.tbd-cell b{font-weight:800;color:var(--muted);}
   /* 멤버 — 조직도 */
   .org-top{display:flex;flex-direction:column;align-items:center;}
   .org-unit{display:flex;flex-direction:column;text-align:center;}
@@ -672,7 +674,7 @@ PART_SCHEDULE.forEach(d => d.meals.forEach((m,i) => PART_SLOTS.push({ id:m.id, l
 const ALL_SLOTS = PART_SLOTS.map(s => s.id);
 // status: full(전참) / part(부분참) / tbd(미정), attend: 참석 식사 id, note: 이동·비고
 const MEMBERS = [
-  { name:"유제성", status:"tbd", attend:[], note:"교회차 / 중간에 취업되면 변동있음", team:"bible", hold:"보류" },
+  { name:"유제성", status:"tbd", attend:[], note:"교회차 / 중간에 취업되면 변동있음", team:"bible", hold:"보류", confirmBy:"7/12" },
   { name:"김지수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"camp" },
   { name:"강은수", status:"full", attend:["29L","29D","30B","30L","30D","31B","31L","31D","1L"], note:"", team:"bible" },
   { name:"황현성", status:"tbd", attend:[], note:"공익근무 출근 후 확인필요" },
@@ -688,7 +690,7 @@ const MEMBERS = [
   { name:"최강",   status:"tbd", attend:[], note:"다시확인필요", team:"camp" },
   { name:"김혜경", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통", team:"bible" },
   { name:"박동원", status:"part", attend:["29D","30B","30L","30D","31B","31L","31D","1L"], note:"대중교통", team:"camp" },
-  { name:"최설화", status:"tbd", attend:[], note:"대중교통", team:"bible" },
+  { name:"최설화", status:"tbd", attend:[], note:"대중교통", team:"bible", confirmBy:"7/12" },
   { name:"강지수", status:"tbd", attend:[], note:"카풀필요" },
   { name:"황민영", status:"part", attend:["30D","31B","31L","31D","1L"], note:"카풀필요", team:"camp" },
   { name:"성재범", status:"part", attend:["30D","31B","31L","31D","1L"], note:"자차" },
@@ -939,10 +941,16 @@ const TEAM_GROUPS = [
 const STATUS_LABEL = { full:"전참", part:"부분참", tbd:"미정" };
 function rosterRows(members){
   return members.map(m => {
-    const set = new Set(m.attend||[]);
     const tags = `<span class="nm-st nm-${m.status}">${STATUS_LABEL[m.status]}</span>${m.hold?`<span class="nm-hold">${esc(m.hold)}</span>`:""}`;
-    return `<tr><td class="nm">${esc(m.name)}<br>${tags}</td>${PART_SLOTS.map(s =>
-      `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("")}<td class="note">${esc(m.note||"")}</td></tr>`;
+    let cells;
+    if(m.status==="tbd"){
+      cells = `<td class="daystart tbd-cell" colspan="${PART_SLOTS.length}">확정예정${m.confirmBy?` <b>${esc(m.confirmBy)}</b>`:" 미정"}</td>`;
+    } else {
+      const set = new Set(m.attend||[]);
+      cells = PART_SLOTS.map(s =>
+        `<td class="${s.first?'daystart ':''}${set.has(s.id)?'on':'off'}">${set.has(s.id)?'✓':'·'}</td>`).join("");
+    }
+    return `<tr><td class="nm">${esc(m.name)}<br>${tags}</td>${cells}<td class="note">${esc(m.note||"")}</td></tr>`;
   }).join("");
 }
 function renderRoster(){
